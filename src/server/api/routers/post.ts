@@ -69,6 +69,8 @@ export const postRouter = createTRPCRouter({
     const route = process.env.LIST_POSTS_ROUTE ?? "";
 
     do {
+      console.log("Index retrieved:", index);
+
       const response = await fetch(route, {
         method: "POST",
         headers: {
