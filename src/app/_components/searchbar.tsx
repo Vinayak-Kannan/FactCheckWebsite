@@ -15,15 +15,13 @@ export function SearchBar() {
     undefined,
   );
 
+  const options = api.post.listClaims.useQuery();
+
   useEffect(() => {
-    const fetchData = () => {
-      const options = api.post.listClaims.useSuspenseQuery();
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      setSearchOptions(options);
-    };
-    fetchData();
-  }, []);
+    if (options.data) {
+      setSearchOptions(options.data);
+    }
+  }, [options.data]);
 
   return (
     <Box className="flex h-screen w-full flex-col items-center bg-white pt-2">
