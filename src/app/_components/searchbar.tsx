@@ -20,6 +20,9 @@ export function SearchBar() {
   const [selectedClaim, setSelectedClaim] = useState<Claim | undefined>(
     undefined,
   );
+  const [makeRequestForClaims, setMakeRequestForClaims] = useState(
+    searchOptions.length === 0,
+  );
 
   const filterOptions = createFilterOptions({
     matchFrom: "any",
@@ -27,7 +30,7 @@ export function SearchBar() {
   });
 
   const options = api.post.listClaims.useQuery(undefined, {
-    enabled: searchOptions.length === 0,
+    enabled: makeRequestForClaims,
   });
 
   useEffect(() => {
@@ -39,6 +42,7 @@ export function SearchBar() {
         return options.data.find((claim) => claim.text === text);
       });
       if (uniqueClaims) {
+        setMakeRequestForClaims(false);
         setSearchOptions(uniqueClaims);
       }
     }
