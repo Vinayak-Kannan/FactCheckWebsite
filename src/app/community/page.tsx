@@ -1,13 +1,45 @@
 "use client";
 
-import { useState } from "react";
-import { Box, Typography, Slider, Button } from "@mui/material";
+import { useEffect, useState } from "react";
+import {
+  Box,
+  Typography,
+  Slider,
+  Button,
+  CircularProgress,
+} from "@mui/material";
+import { api } from "~/trpc/react";
+import { ClaimComparison } from "~/server/api/routers/post";
 
 export default function Page() {
   const [similarity, setSimilarity] = useState<number>(100);
+  const [unClassifiedClaim, setUnClassifiedClaim] = useState<
+    ClaimComparison | undefined
+  >(undefined);
+  const [pairedClaim, setPairedClaim] = useState<ClaimComparison | undefined>(
+    undefined,
+  );
+
+  const { data, isLoading, refetch, isRefetching } =
+    api.post.getCommunityClaims.useQuery(undefined, {
+      enabled: unClassifiedClaim === undefined,
+    });
+
+  useEffect(() => {
+    if (data) {
+      setUnClassifiedClaim(data.unclassified_claim);
+      setPairedClaim(data.paired_claim);
+    }
+  }, [data]);
 
   return (
     <Box className="flex min-h-screen w-full">
+      {isLoading ||
+        (isRefetching && (
+          <Box className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-75">
+            <CircularProgress />
+          </Box>
+        ))}
       <Box className="flex w-full max-w-4xl flex-col gap-8 p-8">
         <Box className="flex flex-col gap-4">
           <Typography variant="h4" className="font-bold">
@@ -19,8 +51,6 @@ export default function Page() {
             sharing knowledge, and combating misinformation. Your volunteering
             effort can make a real impact
           </Typography>
-
-          <Typography className="text-gray-600">Step 1/3</Typography>
         </Box>
 
         <Box className="flex flex-col gap-6">
@@ -32,18 +62,11 @@ export default function Page() {
 
           <Box className="flex flex-col gap-4 rounded-lg bg-gray-50 p-6">
             <Typography className="text-gray-800">
-              Charles David Keeling, of Scripps Institution of Oceanography at
-              UC San Diego, was the first person to make frequent regular
-              measurements of atmospheric CO 2 concentrations at the South Pole,
-              and on Mauna Loa, Hawaii from March 1958 onwards.
+              {unClassifiedClaim?.text}
             </Typography>
 
             <Typography className="text-gray-800">
-              While traditionally load balancing strategies have been designed
-              to change consumers consumption patterns to make demand more
-              uniform, developments in energy storage and individual renewable
-              energy generation have provided opportunities to devise balanced
-              power grids without affecting consumers behavior.
+              {pairedClaim?.text}
             </Typography>
 
             <Box className="mt-4">
@@ -74,9 +97,9 @@ export default function Page() {
           <Button
             variant="contained"
             className="mt-4 w-full bg-blue-700 py-3 text-white hover:bg-blue-800"
-            onClick={() => console.log("Next step clicked")}
+            onClick={() => refetch()}
           >
-            NEXT STEP
+            Submit
           </Button>
         </Box>
       </Box>

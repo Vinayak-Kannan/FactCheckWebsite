@@ -30,6 +30,16 @@ export interface Claim {
   similar_claims: string;
 }
 
+export interface ClaimComparison {
+  text: string;
+  id: string;
+}
+
+export interface GetCommunityClaimsResponse {
+  unclassified_claim: ClaimComparison;
+  paired_claim: ClaimComparison;
+}
+
 export const postRouter = createTRPCRouter({
   hello: publicProcedure
     .input(z.object({ text: z.string() }))
@@ -98,5 +108,36 @@ export const postRouter = createTRPCRouter({
     } while (index < totalChunks);
 
     return allData;
+  }),
+
+  getCommunityClaims: publicProcedure.query(async () => {
+    interface response {
+      message: string;
+      unclassified_claim: ClaimComparison;
+      paired_claim: ClaimComparison;
+    }
+
+    const route = process.env.GET_COMMUNITY_CLAIMS_ROUTE ?? "";
+
+    const response = await fetch(route, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain",
+        Origin: "https://wefactcheck-994733.webflow.io",
+      },
+      body: JSON.stringify({}),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch data`);
+    }
+
+    const result = (await response.json()) as response;
+
+    const data: GetCommunityClaimsResponse = {
+      unclassified_claim: result.unclassified_claim,
+      paired_claim: result.paired_claim,
+    };
+    return data;
   }),
 });
