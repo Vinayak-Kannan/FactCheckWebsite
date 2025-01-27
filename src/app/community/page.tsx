@@ -9,7 +9,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { api } from "~/trpc/react";
-import { ClaimComparison } from "~/server/api/routers/post";
+import { type ClaimComparison } from "~/server/api/routers/post";
 
 export default function Page() {
   const [similarity, setSimilarity] = useState<number>(100);
@@ -31,6 +31,21 @@ export default function Page() {
       setPairedClaim(data.paired_claim);
     }
   }, [data]);
+
+  const mutation = api.post.postHumanInput.useMutation();
+
+  const handleSubmit = async (claim: ClaimComparison, score: number) => {
+    try {
+      await mutation.mutateAsync({
+        text: claim.id,
+        claim_id: claim.text,
+        score: score,
+      });
+      console.log("Data submitted successfully!");
+    } catch (error) {
+      console.error("Failed to submit data", error);
+    }
+  };
 
   return (
     <Box className="flex min-h-screen w-full">
@@ -97,7 +112,11 @@ export default function Page() {
           <Button
             variant="contained"
             className="mt-4 w-full bg-blue-700 py-3 text-white hover:bg-blue-800"
-            onClick={() => refetch()}
+            onClick={async () => {
+              if (unClassifiedClaim != undefined)
+                await handleSubmit(unClassifiedClaim, similarity);
+              await refetch();
+            }}
           >
             Submit
           </Button>
