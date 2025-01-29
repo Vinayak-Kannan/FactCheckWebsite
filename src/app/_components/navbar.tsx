@@ -38,6 +38,11 @@ export function Navbar() {
         </Box>
 
         <Box sx={{ display: "flex", gap: 2 }}>
+            <Link href="/chart" passHref>
+                <Button color="inherit" sx={{ color: "#000" }}>
+                    Chart.js
+                </Button>
+            </Link>
           <Link href="/" passHref>
             <Button color="inherit" sx={{ color: "#000" }}>
               Our Model
@@ -48,7 +53,7 @@ export function Navbar() {
               Community
             </Button>
           </Link>
-          <Link href="/" passHref>
+          <Link href="/about" passHref>
             <Button color="inherit" sx={{ color: "#000" }}>
               About
             </Button>
