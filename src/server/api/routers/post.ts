@@ -140,4 +140,26 @@ export const postRouter = createTRPCRouter({
     };
     return data;
   }),
+
+  postHumanInput: publicProcedure
+    .input(
+      z.object({ text: z.string(), claim_id: z.string(), score: z.number() }),
+    )
+    .mutation(async ({ input }) => {
+      const route = process.env.POST_HUMAN_INPUT_ROUTE ?? "";
+      const response = await fetch(route, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain",
+          Origin: "https://wefactcheck-994733.webflow.io",
+        },
+        body: JSON.stringify(input),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to post data`);
+      }
+
+      return input;
+    }),
 });
