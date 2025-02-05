@@ -90,13 +90,12 @@ export function SearchBar() {
         </Box>
       </Box>
       {selectedClaim && (
-          <FactCheckModal
-              open={isModalOpen}
-              claim={selectedClaim}
-              onClose={() => setIsModalOpen(false)}
-          />
+        <FactCheckModal
+          open={isModalOpen}
+          claim={selectedClaim}
+          onCloseAction={() => setIsModalOpen(false)}
+        />
       )}
-
     </Box>
   );
 }
