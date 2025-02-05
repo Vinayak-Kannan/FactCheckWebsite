@@ -93,7 +93,7 @@ export function SearchBar() {
         <FactCheckModal
           open={isModalOpen}
           claim={selectedClaim}
-          onClose={() => setIsModalOpen(false)}
+          onCloseAction={() => setIsModalOpen(false)}
         />
       )}
     </Box>

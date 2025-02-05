@@ -9,7 +9,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { api } from "~/trpc/react";
-import { type ClaimComparison } from "~/server/api/routers/post";
+import type { ClaimComparison } from "~/server/api/routers/post";
 
 export default function Page() {
   const [similarity, setSimilarity] = useState<number>(100);

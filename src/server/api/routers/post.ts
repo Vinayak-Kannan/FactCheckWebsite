@@ -89,7 +89,6 @@ export const postRouter = createTRPCRouter({
         },
         body: JSON.stringify({ index }),
       });
-
       if (!response.ok) {
         throw new Error(`Failed to fetch data at index ${index}`);
       }
@@ -106,7 +105,6 @@ export const postRouter = createTRPCRouter({
       totalChunks = result.totalChunks;
       index++;
     } while (index < totalChunks);
-
     return allData;
   }),
 
