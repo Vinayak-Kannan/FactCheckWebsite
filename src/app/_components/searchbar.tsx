@@ -11,7 +11,6 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import { api } from "~/trpc/react";
 import { FactCheckModal } from "~/app/_components/factcheckmodal";
-import { NewFactCheckModal} from "~/app/_components/newfactcheckmodal";
 import { type Claim } from "~/server/api/routers/post";
 
 export function SearchBar() {
@@ -90,17 +89,8 @@ export function SearchBar() {
           />
         </Box>
       </Box>
-      {/*{selectedClaim && (*/}
-      {/*  <FactCheckModal*/}
-      {/*    open={isModalOpen}*/}
-      {/*    claim={selectedClaim}*/}
-      {/*    onClose={() => setIsModalOpen(false)}*/}
-      {/*  />*/}
-      {/*)}*/}
-
-
       {selectedClaim && (
-          <NewFactCheckModal
+          <FactCheckModal
               open={isModalOpen}
               claim={selectedClaim}
               onClose={() => setIsModalOpen(false)}
