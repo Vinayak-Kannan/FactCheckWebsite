@@ -1,8 +1,6 @@
 "use client";
 
 import { Modal, Box, Typography, Button, IconButton } from "@mui/material";
-import CheckIcon from '@mui/icons-material/Check';
-import ClearIcon from '@mui/icons-material/Clear';
 import CloseIcon from "@mui/icons-material/Close";
 import { type Claim } from "~/server/api/routers/post";
 import {useEffect, useState} from "react";
@@ -84,19 +82,17 @@ export function FactCheckModal({ open, onClose, claim }: FactCheckModalProps) {
 
   return (
       <Modal open={open} onClose={onClose} aria-labelledby="fact-check-modal">
-        {/* 固定宽度的 Modal 卡片 */}
         <Box
             className="absolute left-1/2 top-1/2 w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-6 shadow-xl"
             sx={{
-              height: '600px', // 固定高度
-              maxHeight: '90vh', // 最大高度（适配小屏幕）
-              overflow: 'hidden', // 防止内容超出
+              height: '600px',
+              maxHeight: '90vh',
+              overflow: 'hidden',
               display: 'flex',
-              flexDirection: 'column', // 内部布局
+              flexDirection: 'column',
             }}
         >
 
-          {/* 顶部部分 */}
           <Box className="mb-4 flex items-center justify-between">
             <Typography variant="h6" component="h2">
               Fact Check
@@ -107,17 +103,15 @@ export function FactCheckModal({ open, onClose, claim }: FactCheckModalProps) {
           </Box>
 
 
-          {/* Tabs 和内容的容器 */}
           <Box
               sx={{
-                display: 'flex', // 保持 Tabs 和 Tab 内容横向排列
+                display: 'flex',
                 flexDirection: 'row',
                 flexGrow: 1,
-                gap: 2, // 增加 Tabs 与内容之间的间距
-                width: '100%', // 宽度填满 Modal
+                gap: 2,
+                width: '100%',
               }}
           >
-            {/* Tabs 部分，宽度自适应 */}
             <Tabs
                 orientation="vertical"
                 variant="scrollable"
@@ -128,8 +122,8 @@ export function FactCheckModal({ open, onClose, claim }: FactCheckModalProps) {
                   borderRight: 1,
                   borderColor: 'divider',
                   '.MuiTab-root': {
-                    whiteSpace: 'normal', // Tab 名称自动换行
-                    textAlign: 'left', // 文字左对齐
+                    whiteSpace: 'normal',
+                    textAlign: 'left',
                   },
                 }}
             >
@@ -138,13 +132,12 @@ export function FactCheckModal({ open, onClose, claim }: FactCheckModalProps) {
               <Tab label="Similar Claims" {...a11yProps(2)} />
             </Tabs>
 
-            {/* 内容部分，宽度固定 */}
             <Box
                 sx={{
                   flexGrow: 1,
-                  minWidth: '500px', // Tab 内容部分最小宽度固定
-                  maxWidth: '500px', // 最大宽度固定
-                  overflow: 'auto', // 避免内容超出
+                  minWidth: '500px',
+                  maxWidth: '500px',
+                  overflow: 'auto',
                 }}
             >
               <TabPanel value={value} index={0}>

@@ -1,5 +1,5 @@
 "use client";
-import React, {useEffect, useState } from 'react';
+import React from 'react';
 import {Box, Typography} from "@mui/material";
 import {
     Chart as ChartJS,
@@ -16,7 +16,6 @@ ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
 
 const ChartPage = () => {
 
-
     return (
         <Box className="flex min-h-screen w-full">
             <Box className="flex w-full max-w-4xl flex-col gap-8 p-8">
@@ -24,12 +23,8 @@ const ChartPage = () => {
                     <Typography variant="h4" className="font-bold">
                         Chart for Claims
                     </Typography>
-
-
-
                 </Box>
 
-                {/* Scatter Plot 图表 */}
                 <Box className="flex justify-center items-center w-full">
                     <ClaimsChart />
                 </Box>
