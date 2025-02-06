@@ -107,11 +107,10 @@ export function ClaimsChart(){
     }
 
     return (
-        <Box className="flex min-h-screen w-full">
-            <Box className="flex w-full max-w-4xl flex-col gap-8 p-8">
-                <Scatter options={options} data={chartData} />
+        <Box className="flex justify-center items-center w-full p-4">
+            <Box className="w-full max-w-[95%] flex justify-center">
+                <Scatter options={options} data={chartData} className="w-full h-auto" />
             </Box>
-
         </Box>
     );
 }
