@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Box, Typography, Paper } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
 import React from "react";
 import { ClaimsChart } from "../_components/claimschart";
