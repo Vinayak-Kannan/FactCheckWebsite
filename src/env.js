@@ -11,6 +11,7 @@ export const env = createEnv({
     LIST_POSTS_ROUTE: z.string().url(),
     GET_COMMUNITY_CLAIMS_ROUTE: z.string().url(),
     POST_HUMAN_INPUT_ROUTE: z.string().url(),
+    POST_CHECK_INFERENCE_ROUTE: z.string().url(),
   },
 
   /**
@@ -31,6 +32,7 @@ export const env = createEnv({
     LIST_POSTS_ROUTE: process.env.LIST_POSTS_ROUTE,
     GET_COMMUNITY_CLAIMS_ROUTE: process.env.GET_COMMUNITY_CLAIMS_ROUTE,
     POST_HUMAN_INPUT_ROUTE: process.env.POST_HUMAN_INPUT_ROUTE,
+    POST_CHECK_INFERENCE_ROUTE: process.env.POST_CHECK_INFERENCE_ROUTE,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**
