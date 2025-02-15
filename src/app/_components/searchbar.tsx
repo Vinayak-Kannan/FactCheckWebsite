@@ -12,7 +12,10 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import { api } from "~/trpc/react";
 import { FactCheckModal } from "~/app/_components/factcheckmodal";
-import { type Claim } from "~/server/api/routers/post";
+import {
+  type Claim,
+  type PostRealTimeInferenceResponse,
+} from "~/server/api/routers/post";
 
 export function SearchBar() {
   const [searchValue, setSearchValue] = useState("");
