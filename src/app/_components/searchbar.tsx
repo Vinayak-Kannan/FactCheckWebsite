@@ -55,20 +55,51 @@ export function SearchBar() {
               <CircularProgress />
             </Box>
         )}
+          <Button
+              variant="contained"
+              className="mt-4 w-1/6 bg-blue-700 py-3 text-white hover:bg-blue-800"
+              onClick={async () => {
+                  if (searchValueInference.length === 0) return;
+                  await handleSubmit(searchValueInference);
+              }}
+          >
+              Generate prediction
+              {isLoadingInference && (
+                  <CircularProgress size={24} className="ml-2" color="secondary" />
+              )}
+          </Button>
         <Box className="flex w-full max-w-[800px] items-center px-2">
           <Box className="flex w-full items-center rounded border border-gray-200">
             <SearchIcon className="ml-2 text-gray-500" />
             <Autocomplete
-                freeSolo
+                noOptionsText={
+                    "No matches... Check the veracity by clicking the button above!"
+                }
                 fullWidth
+                onInputChange={(_, newInputValue) => {
+                    if (newInputValue.length > 0) {
+                        setSearchValueInferece(newInputValue);
+                        setSearchValue(newInputValue);
+                    }
+                    return;
+                }}
                 value={searchValue}
                 filterOptions={filterOptions}
-                options={searchOptions.map((option) => option?.text || "")}
+                options={searchOptions.map((option) => {
+                    if (!option) return "";
+                    return option.text ?? "";
+                })}
                 onChange={(_, newValue) => {
-                  const claim = searchOptions.find((option) => option?.text === newValue);
-                  if (!claim) return;
-                  setSelectedClaim(claim);
-                  setIsModalOpen(true);
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-expect-error
+                    setSearchValue(newValue! || "");
+                    const claim = searchOptions.find((option) => {
+                        if (!option) return false;
+                        return option.text === newValue;
+                    });
+                    if (!claim) return;
+                    setSelectedClaim(claim);
+                    setIsModalOpen(true);
                 }}
                 renderInput={(params) => (
                     <TextField
