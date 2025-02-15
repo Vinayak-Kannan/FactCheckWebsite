@@ -64,7 +64,7 @@ export const postRouter = createTRPCRouter({
     return posts.at(-1) ?? null;
   }),
 
-  // The real code
+  //The real code
   listClaims: publicProcedure.query(async () => {
     const allData: Claim[] = [];
     let index = 0;

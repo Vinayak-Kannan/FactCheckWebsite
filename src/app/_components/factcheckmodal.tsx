@@ -178,7 +178,7 @@ export function FactCheckModal({
             </TabPanel>
 
             <TabPanel value={value} index={2}>
-              <Typography variant="subtitle2" className="mb-2">
+              <Typography variant="h6" className="mb-2 font-bold">
                 Similar Claims:
               </Typography>
               <Box
@@ -199,10 +199,18 @@ export function FactCheckModal({
                     </Typography>
                   </Box>
                 ))}
+                  <Typography variant="h6" className="mt-4 mb-1 font-bold">
+                      Claim Source:
+                  </Typography>
+                  {claim.source.startsWith("http") ? (
+                      <Button href={claim.source} className="text-blue-600 hover:underline">
+                          {claim.source}
+                      </Button>
+                  ) : (
+                      <Typography>{claim.source}</Typography>
+                  )}
               </Box>
-              <Button href="#" className="text-blue-600 hover:underline">
-                {claim.source}
-              </Button>
+
             </TabPanel>
           </Box>
         </Box>

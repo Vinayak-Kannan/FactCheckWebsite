@@ -1,5 +1,6 @@
 import React from 'react';
-import { Container, Typography, Grid, Card, CardContent, Avatar, Box } from '@mui/material';
+import { Container, Typography, Card, CardContent, Avatar, Box } from '@mui/material';
+import Grid2 from '@mui/material/Grid2';
 
 
 const AboutPage: React.FC = () => {
@@ -33,6 +34,12 @@ const AboutPage: React.FC = () => {
         { name: 'Xinran She', description: 'Graduate student at Columbia University’s Data Science Institute.', image: '/assets/Nikita.svg' },
         { name: 'Shan Hui', description: 'Graduate student at Columbia University’s Data Science Institute.', image: '/assets/Haiwen.svg' },
         { name: 'Ruoxuan Li', description: 'Graduate student at Columbia University’s Data Science Institute.', image: '/assets/Nikita.svg' },
+        { name: 'Haonan Zhou', description: 'Graduate student at Columbia University’s Data Science Institute.', image: '/assets/Nikita.svg' },
+        { name: 'Gufeng Liu', description: 'Graduate student at Columbia University’s Data Science Institute.', image: '/assets/Haiwen.svg' },
+        { name: 'Yuwei Ding', description: 'Graduate student at Columbia University’s Data Science Institute.', image: '/assets/Nikita.svg' },
+        { name: 'Inas El Ouazguiti', description: 'Graduate student at Columbia University’s Data Science Institute.', image: '/assets/Haiwen.svg' },
+        { name: 'Yanjie Wu', description: 'Graduate student at Columbia University’s Data Science Institute.', image: '/assets/Nikita.svg' },
+        { name: 'Shicheng Li', description: 'Graduate student at Columbia University’s Data Science Institute.', image: '/assets/Nikita.svg' },
     ];
 
     return (
@@ -55,29 +62,27 @@ const AboutPage: React.FC = () => {
                     <Typography variant="h4" component="h2" gutterBottom>
                         Team
                     </Typography>
-                    <Grid container spacing={4}>
+                    <Grid2 container spacing={4}>
                         {teamMembers.map((member, index) => (
-                            <Grid item xs={12} sm={6} md={4} key={index}>
-                                <Card>
-                                    <CardContent>
-                                        <Box display="flex" flexDirection="column" alignItems="center" mb={2}>
-                                            {member.image ? (
-                                                <Avatar src={member.image} alt={member.name} sx={{ width: 150, height: 150, mb: 2 }} variant="rounded" />
-                                            ) : (
-                                                <Avatar sx={{ width: 150, height: 150, mb: 2, bgcolor: 'grey.300' }} variant="rounded" />
-                                            )}
-                                            <Typography variant="h6" component="h3" align="center">
-                                                {member.name}
-                                            </Typography>
-                                        </Box>
-                                        <Typography variant="body2" color="text.secondary" align="center">
+                            <Grid2 size={{ xs: 12, sm: 6, md: 4 }} key={index}>
+                                <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+                                    <CardContent sx={{ flexGrow: 1, display: "flex", flexDirection: "column", alignItems: "center" }}>
+                                        {member.image ? (
+                                            <Avatar src={member.image} alt={member.name} sx={{ width: 150, height: 150, mb: 2 }} variant="rounded" />
+                                        ) : (
+                                            <Avatar sx={{ width: 150, height: 150, mb: 2, bgcolor: 'grey.300' }} variant="rounded" />
+                                        )}
+                                        <Typography variant="h6" component="h3" align="center">
+                                            {member.name}
+                                        </Typography>
+                                        <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 2 }}>
                                             {member.description}
                                         </Typography>
                                     </CardContent>
                                 </Card>
-                            </Grid>
+                            </Grid2>
                         ))}
-                    </Grid>
+                    </Grid2>
                 </Box>
             </Container>
 
