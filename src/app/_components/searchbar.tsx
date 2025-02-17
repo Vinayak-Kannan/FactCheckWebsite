@@ -7,14 +7,20 @@ import {
   TextField,
   createFilterOptions,
   CircularProgress,
+  Button,
+  Typography,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { api } from "~/trpc/react";
 import { FactCheckModal } from "~/app/_components/factcheckmodal";
-import { type Claim } from "~/server/api/routers/post";
+import {
+  type Claim,
+  type PostRealTimeInferenceResponse,
+} from "~/server/api/routers/post";
 
 export function SearchBar() {
   const [searchValue, setSearchValue] = useState("");
+  const [searchValueInference, setSearchValueInferece] = useState("");
   const [searchOptions, setSearchOptions] = useState<(Claim | undefined)[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedClaim, setSelectedClaim] = useState<Claim | undefined>(
@@ -23,6 +29,9 @@ export function SearchBar() {
   const [makeRequestForClaims, setMakeRequestForClaims] = useState(
     searchOptions.length === 0,
   );
+  const [inferenceResponse, setInferenceResponse] =
+    useState<PostRealTimeInferenceResponse | null>(null);
+  const [isLoadingInference, setIsLoadingInference] = useState(false);
 
   const filterOptions = createFilterOptions({
     matchFrom: "any",
@@ -48,6 +57,56 @@ export function SearchBar() {
     }
   }, [options.data]);
 
+  const mutation = api.post.postRealTimeInference.useMutation();
+
+  const query = api.post.getRealTimeInferenceUpdate.useMutation();
+
+  const handleSubmit = async (claim: string) => {
+    setIsLoadingInference(true);
+    try {
+      console.log("Starting submit...");
+      const response: PostRealTimeInferenceResponse =
+        await mutation.mutateAsync({
+          text: claim,
+        });
+      if (!response.is_check_worthy) {
+        setIsLoadingInference(false);
+        setInferenceResponse(response);
+        return response;
+      }
+
+      let checkUpdate = await query.mutateAsync({
+        id: response.uuid,
+      });
+      while (checkUpdate.isFound === false) {
+        console.log("Waiting for update...");
+        await new Promise((resolve) => setTimeout(resolve, 4000));
+        checkUpdate = await query.mutateAsync({
+          id: response.uuid,
+        });
+      }
+
+      console.log("Data submitted successfully!");
+      setIsLoadingInference(false);
+      setInferenceResponse(checkUpdate);
+      return checkUpdate;
+    } catch (error) {
+      console.error("Failed to submit data", error);
+      setIsLoadingInference(false);
+      setInferenceResponse({
+        prediction: "error",
+        explanation: "error",
+        similar_claims: "error",
+        claim: "error",
+        cluster_name: "error",
+        is_check_worthy: false,
+        check_worthiness_score: 0,
+        uuid: "error",
+        isFound: false,
+      });
+    }
+  };
+
   return (
     <Box className="flex h-screen w-full flex-col items-center bg-white pt-2">
       {searchOptions.length === 0 && (
@@ -55,12 +114,34 @@ export function SearchBar() {
           <CircularProgress />
         </Box>
       )}
+      <Button
+        variant="contained"
+        className="mt-4 w-1/6 bg-blue-700 py-3 text-white hover:bg-blue-800"
+        onClick={async () => {
+          if (searchValueInference.length === 0) return;
+          await handleSubmit(searchValueInference);
+        }}
+      >
+        Generate prediction
+        {isLoadingInference && (
+          <CircularProgress size={24} className="ml-2" color="secondary" />
+        )}
+      </Button>
       <Box className="flex w-full max-w-[800px] items-center px-2">
         <Box className="flex w-full items-center rounded border border-gray-200">
           <SearchIcon className="ml-2 text-gray-500" />
           <Autocomplete
-            freeSolo
+            noOptionsText={
+              "No matches... Check the veracity by clicking the button above!"
+            }
             fullWidth
+            onInputChange={(_, newInputValue) => {
+              if (newInputValue.length > 0) {
+                setSearchValueInferece(newInputValue);
+                setSearchValue(newInputValue);
+              }
+              return;
+            }}
             value={searchValue}
             filterOptions={filterOptions}
             options={searchOptions.map((option) => {
@@ -89,14 +170,37 @@ export function SearchBar() {
           />
         </Box>
       </Box>
-      {selectedClaim && (
-          <FactCheckModal
-              open={isModalOpen}
-              claim={selectedClaim}
-              onClose={() => setIsModalOpen(false)}
-          />
+      {inferenceResponse && (
+        <Box className="mt-4">
+          <Typography color="red">
+            Is Claim Checkworthy?{" "}
+            {inferenceResponse.is_check_worthy ? "Yes" : "No"}
+          </Typography>
+          <Typography color="red">
+            Checkworthy Score: {inferenceResponse.check_worthiness_score}
+          </Typography>
+          <Typography color="red">
+            Prediction: {inferenceResponse.prediction}
+          </Typography>
+          <Typography color="red">
+            Explanation: {inferenceResponse.explanation}
+          </Typography>
+          <Typography color="red">
+            Similar Claims: {inferenceResponse.similar_claims}
+          </Typography>
+          <Typography color="red">Claim: {inferenceResponse.claim}</Typography>
+          <Typography color="red">
+            Cluster Name: {inferenceResponse.cluster_name}
+          </Typography>
+        </Box>
       )}
-
+      {selectedClaim && (
+        <FactCheckModal
+          open={isModalOpen}
+          claim={selectedClaim}
+          onCloseAction={() => setIsModalOpen(false)}
+        />
+      )}
     </Box>
   );
 }

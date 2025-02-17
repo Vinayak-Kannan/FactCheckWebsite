@@ -40,6 +40,18 @@ export interface GetCommunityClaimsResponse {
   paired_claim: ClaimComparison;
 }
 
+export interface PostRealTimeInferenceResponse {
+  prediction: string;
+  explanation: string;
+  similar_claims: string;
+  claim: string;
+  cluster_name: string;
+  is_check_worthy: boolean;
+  check_worthiness_score: number;
+  uuid: string;
+  isFound: boolean;
+}
+
 export const postRouter = createTRPCRouter({
   hello: publicProcedure
     .input(z.object({ text: z.string() }))
@@ -137,4 +149,94 @@ export const postRouter = createTRPCRouter({
     };
     return data;
   }),
+
+  postHumanInput: publicProcedure
+    .input(
+      z.object({ text: z.string(), claim_id: z.string(), score: z.number() }),
+    )
+    .mutation(async ({ input }) => {
+      const route = process.env.POST_HUMAN_INPUT_ROUTE ?? "";
+      const response = await fetch(route, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain",
+          Origin: "https://wefactcheck-994733.webflow.io",
+        },
+        body: JSON.stringify(input),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to post data`);
+      }
+
+      return input;
+    }),
+
+  postRealTimeInference: publicProcedure
+    .input(z.object({ text: z.string() }))
+    .mutation(async ({ input }) => {
+      const postObject = {
+        claim_inference: input.text,
+      };
+
+      postObject.claim_inference = postObject.claim_inference.replace(/'/g, "");
+      postObject.claim_inference = postObject.claim_inference.replace(/"/g, "");
+
+      const route = process.env.POST_HUMAN_INPUT_ROUTE ?? "";
+      const response = await fetch(route, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain",
+          Origin: "https://wefactcheck-994733.webflow.io",
+        },
+        body: JSON.stringify(postObject),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to post data`);
+      }
+
+      try {
+        const result = (await response.json()) as PostRealTimeInferenceResponse;
+        console.log(result);
+
+        if (result.prediction === "1") {
+          result.prediction = "False";
+        } else if (result.prediction === "3") {
+          result.prediction = "True";
+        } else if (result.prediction === "3") {
+          result.prediction = "Unclassified";
+        }
+
+        return result;
+      } catch (error) {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        throw new Error(`Failed to parse response: ${error}`);
+      }
+    }),
+
+  getRealTimeInferenceUpdate: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input }) => {
+      const route = process.env.POST_CHECK_INFERENCE_ROUTE ?? "";
+
+      const response = await fetch(route, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain",
+          Origin: "https://wefactcheck-994733.webflow.io",
+        },
+        body: JSON.stringify({
+          id: input.id,
+        }),
+      });
+
+      console.log(response);
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch data`);
+      }
+
+      return (await response.json()) as PostRealTimeInferenceResponse;
+    }),
 });

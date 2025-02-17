@@ -32,6 +32,21 @@ export default function Page() {
     }
   }, [data]);
 
+  const mutation = api.post.postHumanInput.useMutation();
+
+  const handleSubmit = async (claim: ClaimComparison, score: number) => {
+    try {
+      await mutation.mutateAsync({
+        text: claim.id,
+        claim_id: claim.text,
+        score: score,
+      });
+      console.log("Data submitted successfully!");
+    } catch (error) {
+      console.error("Failed to submit data", error);
+    }
+  };
+
   return (
     <Box className="flex min-h-screen w-full">
       {isLoading ||
@@ -97,7 +112,11 @@ export default function Page() {
           <Button
             variant="contained"
             className="mt-4 w-full bg-blue-700 py-3 text-white hover:bg-blue-800"
-            onClick={() => refetch()}
+            onClick={async () => {
+              if (unClassifiedClaim != undefined)
+                await handleSubmit(unClassifiedClaim, similarity);
+              await refetch();
+            }}
           >
             Submit
           </Button>
