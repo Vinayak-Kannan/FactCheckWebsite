@@ -107,7 +107,6 @@ export const postRouter = createTRPCRouter({
     } while (index < totalChunks);
     return allData;
   }),
-
   getCommunityClaims: publicProcedure.query(async () => {
     interface response {
       message: string;
