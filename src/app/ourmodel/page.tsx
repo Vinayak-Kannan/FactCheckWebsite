@@ -240,7 +240,7 @@ export default function OurModel() {
         Model Overview
       </Typography>
 
-        <Typography variant="body1" sx={{ width: "85%", textAlign: "justify" }}>
+        <Typography variant="body1" sx={{ width: "85%", textAlign: "center" }}>
             Our model checks climate-related claims by gathering two types of data: verified facts and unverified claims. We collect verified facts via a tool called Google Fact Check API and gather unverified claims from Reddit and other websites. These claims are then evaluated for trustworthiness. Only those with a high level of credibility are shown on our site. <strong>Click</strong> on the cards below to learn more about how we gather and process this information.
         </Typography>
 
