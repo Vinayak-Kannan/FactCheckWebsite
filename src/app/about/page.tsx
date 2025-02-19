@@ -34,12 +34,19 @@ const AboutPage: React.FC = () => {
     { name: 'Xinran She', description: 'Graduate student at Columbia University’s Data Science Institute.', image: '/assets/Nikita.svg' },
     { name: 'Shan Hui', description: 'Graduate student at Columbia University’s Data Science Institute.', image: '/assets/Haiwen.svg' },
     { name: 'Ruoxuan Li', description: 'Graduate student at Columbia University’s Data Science Institute.', image: '/assets/Nikita.svg' },
-    { name: 'Haonan Zhou', description: 'Graduate student at Columbia University’s Data Science Institute.', image: '/assets/Nikita.svg' },
-    { name: 'Gufeng Liu', description: 'Graduate student at Columbia University’s Data Science Institute.', image: '/assets/Haiwen.svg' },
-    { name: 'Yuwei Ding', description: 'Graduate student at Columbia University’s Data Science Institute.', image: '/assets/Nikita.svg' },
-    { name: 'Inas El Ouazguiti', description: 'Graduate student at Columbia University’s Data Science Institute.', image: '/assets/Haiwen.svg' },
-    { name: 'Yanjie Wu', description: 'Graduate student at Columbia University’s Data Science Institute.', image: '/assets/Nikita.svg' },
-    { name: 'Shicheng Li', description: 'Graduate student at Columbia University’s Data Science Institute.', image: '/assets/Nikita.svg' },
+    { name: 'Haonan Zhou', description: 'Harry(Haonan) Zhou is a Master of Science in Business Analytics student at Columbia University with a strong background in data science and applied statistics. Before Columbia, he worked as a Data Scientist at Tencent, Apple and Kwaishou. Harry is passionate about bridging data science and business strategy to drive impactful decisions. He is now working on continuous data ingestion task for the website.',
+      image: '/assets/Haonan Zhou.jpg' },
+    { name: 'Gufeng Liu', description: 'Gufeng (Geoff) Liu is a master\'s student in Business Analytics at Columbia University, with a dual degree in Management Science & Engineering from Tsinghua University. He has interned as a data scientist and analyst at Apple, Nestlé, and SAS, working on data-driven decision-making, predictive modeling, and large-scale data processing. His primary role in this project was designing and implementing the continuous data ingestion pipeline to ensure efficient and scalable data processing.',
+      image: '/assets/Gufeng Liu.jpg' },
+    { name: 'Yuwei Ding', description: 'Yuwei (Darcie) Ding is a Master of Science in Business Analytics student at Columbia University. Before Columbia, she earned her Bachelor of Engineering from Zhejiang University and gained industry experience at Amazon Web Services and KPMG. Yuwei is particularly interested in leveraging data-driven insights for decision-making. She is currently working on real-time inference for the website.',
+      image: '/assets/Yuwei Ding.jpg' },
+    { name: 'Inas El Ouazguiti', description: 'Inas earned a Bachelor of Science in Computer Science from the University of South Florida in 2023 and is currently pursuing a Master of Science in Business Analytics at Columbia University. With a strong background in software engineering, she worked at companies like Goldman Sachs, VanEck, and CyberChasse, developing software solutions, automating workflows, and enhancing data processing capabilities. Her work focuses on building scalable systems, optimizing efficiency, and improving strategic product performance through data-driven insights.\n' +
+          'As part of the MyFactWiki project, Inas is contributing to the real-time inference team, working on optimizing automated fact-checking and contextual analysis to enhance the accuracy and efficiency of information retrieval.',
+      image: '/assets/Inas.jpg' },
+    { name: 'Yanjie Wu', description: 'Yanjie Wu is a 2022 graduate from Fudan University with a Bachelor’s in Software Engineering. She worked as a Developer at Morgan Stanley before attending Columbia University to pursue a Master’s in IEOR department. In 2025, she joined the MyFactWiki project, primarily contributing to front-end development.',
+      image: '/assets/Yanjie Wu.jpg' },
+    { name: 'Shicheng Li', description: 'Shicheng (Frank) Li is a dual master\'s student in Business Analytics at Columbia University and Tsinghua University. He has a strong background in statistics and data science, with internship experience as a data scientist and analyst at Apple, Meituan, and Didi. With extensive experience in data science, he aims to apply machine learning techniques to solve business problems. In this project, his primary role was designing and developing the website for the fact-checking model.',
+      image: '/assets/Shicheng Li.jpg' },
   ];
 
   return (
@@ -47,19 +54,20 @@ const AboutPage: React.FC = () => {
 
         <Container sx={{ py: 6 }}>
           <Box mb={6}>
-            <Typography variant="h4" component="h2" gutterBottom >
+            <Typography variant="h4" component="h2" sx={{ textAlign: "center" }}gutterBottom >
               About the Project
             </Typography>
-            <Typography variant="body1" paragraph>
+            <Typography variant="body1">
               Misinformation’s effects, particularly around climate issues, is a complex and evolving phenomenon that requires a collective approach to address effectively. Limited expert resources, biased ratings from crowdsourced veracity judgments, and low public trust without engagement in the fact-checking process are key challenges this project aims to address.
             </Typography>
-            <Typography variant="body1" paragraph>
+            <br />
+            <Typography variant="body1">
               We’re building MyFactWiki, a platform that leverages a transparent AI model combined with crowdsourced similarity assessments to scale expert veracity ratings and collaboratively verify climate news and information. Visit the Our Model page to explore the project’s data sources and modeling process. This project is a work in progress. Check out the Community page to contribute or reach out to us with any questions or thoughts you’d like to share.
             </Typography>
           </Box>
 
           <Box>
-            <Typography variant="h4" component="h2" gutterBottom>
+            <Typography variant="h4" component="h2" sx={{ textAlign: "center" }} gutterBottom>
               Team
             </Typography>
             <Grid2 container spacing={4}>
@@ -86,13 +94,6 @@ const AboutPage: React.FC = () => {
           </Box>
         </Container>
 
-        <Box sx={{ bgcolor: 'grey.200', py: 4, mt: 6 }}>
-          <Container>
-            <Typography variant="body2" align="center">
-              Copyright © 2024 MyFactWiki
-            </Typography>
-          </Container>
-        </Box>
       </Box>
   );
 };
