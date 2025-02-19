@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Autocomplete,
@@ -108,15 +108,20 @@ export function SearchBar() {
   };
 
   return (
-    <Box className="flex h-screen w-full flex-col items-center bg-white pt-2">
+    <Box className="flex h-screen w-full flex-col items-center bg-white pt-[80px]">
       {searchOptions.length === 0 && (
         <Box className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-75">
           <CircularProgress />
         </Box>
       )}
+      <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: "18px", marginBottom: "20px" }}>
+        Get the facts on climate change—type a claim to check its accuracy!
+      </Typography>
+
+
       <Button
         variant="contained"
-        className="mt-4 w-1/6 bg-blue-700 py-3 text-white hover:bg-blue-800"
+        className="w-1/6 bg-blue-700 text-white hover:bg-blue-800"
         onClick={async () => {
           if (searchValueInference.length === 0) return;
           await handleSubmit(searchValueInference);
@@ -127,8 +132,8 @@ export function SearchBar() {
           <CircularProgress size={24} className="ml-2" color="secondary" />
         )}
       </Button>
-      <Box className="flex w-full max-w-[800px] items-center px-2">
-        <Box className="flex w-full items-center rounded border border-gray-200">
+      <Box className="flex w-full max-w-[800px] items-center px-2 py-8">
+        <Box className="flex w-full items-center rounded">
           <SearchIcon className="ml-2 text-gray-500" />
           <Autocomplete
               noOptionsText={
@@ -163,9 +168,18 @@ export function SearchBar() {
               renderInput={(params) => (
                   <TextField
                       {...params}
-                      variant="standard"
+                      variant="outlined"
                       placeholder="Try searching for 'hurricane' or 'windmill'"
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          borderColor: "#0B4797",
+                          "& fieldset": { borderColor: "#0B4797", borderWidth: "2px" },
+                          "&:hover fieldset": { borderColor: "#0B4797", borderWidth: "3px" },
+                          "&.Mui-focused fieldset": { borderColor: "#0B4797", borderWidth: "3px" }
+                        }
+                      }}
                   />
+
               )}
               renderOption={(props, option) => {
                 const claim = searchOptions.find((c) => c?.text === option);
@@ -213,8 +227,6 @@ export function SearchBar() {
                 );
               }}
           />
-
-
         </Box>
       </Box>
       {inferenceResponse && (
