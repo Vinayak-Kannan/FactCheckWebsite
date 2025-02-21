@@ -12,7 +12,7 @@ import { api } from "~/trpc/react";
 import type { ClaimComparison } from "~/server/api/routers/post";
 
 export default function Page() {
-  const [similarity, setSimilarity] = useState<number>(100);
+  const [similarity, setSimilarity] = useState<number>(0);
   const [unClassifiedClaim, setUnClassifiedClaim] = useState<
     ClaimComparison | undefined
   >(undefined);
@@ -86,6 +86,7 @@ export default function Page() {
 
             <Box className="mt-4">
               <Slider
+                defaultValue={0}
                 value={similarity}
                 onChange={(_, newValue) => setSimilarity(newValue as number)}
                 aria-labelledby="similarity-slider"
