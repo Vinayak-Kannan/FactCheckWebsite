@@ -76,7 +76,7 @@ export function ClaimsChart() {
             // const clusterColors = new Map<number, string>();
             const trueFalseColors = new Map<boolean, string>([
                 [true, "green"],
-                [false, "black"]
+                [false, "red"]
             ]);
             // const generateColor = () => `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 1)`;
 
