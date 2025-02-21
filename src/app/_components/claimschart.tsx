@@ -73,8 +73,12 @@ export function ClaimsChart() {
     useEffect(() => {
         if (allClaimsFromQuery.data) {
             const claims = allClaimsFromQuery.data;
-            const clusterColors = new Map<number, string>();
-            const generateColor = () => `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 1)`;
+            // const clusterColors = new Map<number, string>();
+            const trueFalseColors = new Map<boolean, string>([
+                [true, "green"],
+                [false, "black"]
+            ]);
+            // const generateColor = () => `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 1)`;
 
             const filteredClaims = claims.filter(claim =>
                 (selectedCluster === "all" || claim.cluster_name === selectedCluster) &&
@@ -84,14 +88,15 @@ export function ClaimsChart() {
                 filteredClaims.reduce((acc: Record<number, { label: string; data: ScatterDataPoint[]; backgroundColor: string }>, claim) => {
                     console.log(claim.cleaned_veracity, claim.cleaned_predict_veracity);
                     const cluster: number = claim.cluster;
-                    if (!clusterColors.has(cluster)) {
-                        clusterColors.set(cluster, generateColor());
-                    }
+                    // if (!clusterColors.has(cluster)) {
+                    //     clusterColors.set(cluster, generateColor());
+                    // }
                     if (!acc[cluster]) {
                         acc[cluster] = {
                             label: claim.cluster_name,
                             data: [],
-                            backgroundColor: clusterColors.get(cluster)!,
+                            backgroundColor: trueFalseColors.get(claim.predict)!
+                            // backgroundColor: clusterColors.get(cluster)!,
                         };
                     }
                     acc[cluster].data.push({ x: claim.x, y: claim.y, text: claim.text , cleaned_veracity: claim.cleaned_veracity , cleaned_predict_veracity: claim.cleaned_predict_veracity });
@@ -112,7 +117,6 @@ export function ClaimsChart() {
     return (
         <Box className="flex min-h-screen w-full flex-col items-center">
             <Box className="flex gap-4 mb-4">
-                {/* Cluster 选择框 */}
                 <FormControl sx={{ minWidth: 200 }}>
                     <InputLabel>Cluster</InputLabel>
                     <Select
@@ -127,7 +131,6 @@ export function ClaimsChart() {
                     </Select>
                 </FormControl>
 
-                {/* True/False 选择框 */}
                 <FormControl sx={{ minWidth: 200 }}>
                     <InputLabel>True/False</InputLabel>
                     <Select
