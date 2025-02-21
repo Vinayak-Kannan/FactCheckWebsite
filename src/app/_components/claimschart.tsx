@@ -19,8 +19,8 @@ ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
 const options: ChartOptions<"scatter"> = {
     responsive: true,
     scales: {
-        x: { title: { display: true, text: "X-Axis" } },
-        y: { title: { display: true, text: "Y-Axis" } },
+        x: { title: { display: true, text: " Represents the x coordinate of a embedded claim in the scatter plot." } },
+        y: { title: { display: true, text: " Represents the y coordinate of a embedded claim in the scatter plot." } },
     },
     plugins: {
         legend: {
