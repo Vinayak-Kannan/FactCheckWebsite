@@ -33,7 +33,7 @@ export function Navbar() {
               fontSize: "1rem",
             }}
           >
-            Climate
+            [<strong>Climate</strong>]
           </Typography>
         </Box>
 
