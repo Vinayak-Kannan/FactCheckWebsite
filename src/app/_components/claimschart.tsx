@@ -84,22 +84,25 @@ export function ClaimsChart() {
                 (selectedCluster === "all" || claim.cluster_name === selectedCluster) &&
                 (selectedTrueFalse === "all" || String(claim.predict) === selectedTrueFalse)
             );
+
             const datasets = Object.entries(
-                filteredClaims.reduce((acc: Record<number, { label: string; data: ScatterDataPoint[]; backgroundColor: string }>, claim) => {
-                    console.log(claim.cleaned_veracity, claim.cleaned_predict_veracity);
+                filteredClaims.reduce((acc: Record<number, { label: string; data: ScatterDataPoint[]; backgroundColor: string[] }>, claim) => {
                     const cluster: number = claim.cluster;
-                    // if (!clusterColors.has(cluster)) {
-                    //     clusterColors.set(cluster, generateColor());
-                    // }
                     if (!acc[cluster]) {
                         acc[cluster] = {
                             label: claim.cluster_name,
                             data: [],
-                            backgroundColor: trueFalseColors.get(claim.predict)!
-                            // backgroundColor: clusterColors.get(cluster)!,
+                            backgroundColor: []
                         };
                     }
-                    acc[cluster].data.push({ x: claim.x, y: claim.y, text: claim.text , cleaned_veracity: claim.cleaned_veracity , cleaned_predict_veracity: claim.cleaned_predict_veracity });
+                    acc[cluster].data.push({
+                        x: claim.x,
+                        y: claim.y,
+                        text: claim.text,
+                        cleaned_veracity: claim.cleaned_veracity,
+                        cleaned_predict_veracity: claim.cleaned_predict_veracity
+                    });
+                    acc[cluster].backgroundColor.push(trueFalseColors.get(claim.predict) ?? "gray");
                     return acc;
                 }, {})
             ).map(([_, dataset]) => dataset);
