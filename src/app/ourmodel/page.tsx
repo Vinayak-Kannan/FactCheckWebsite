@@ -240,9 +240,15 @@ export default function OurModel() {
         Model Overview
       </Typography>
 
-        <Typography variant="body1" sx={{ width: "85%", textAlign: "center" }}>
-            Our model checks climate-related claims by gathering two types of data: verified facts and unverified claims. We collect verified facts via a tool called Google Fact Check API and gather unverified claims from Reddit and other websites. These claims are then evaluated for trustworthiness. Only those with a high level of credibility are shown on our site. <strong>Click</strong> on the cards below to learn more about how we gather and process this information.
-        </Typography>
+      <Typography variant="body1" sx={{ width: "85%", textAlign: "center" }}>
+        Our model checks climate-related claims by gathering two types of data:
+        verified facts and unverified claims. We collect verified facts via a
+        tool called Google Fact Check API and gather unverified claims from
+        Reddit and other websites. These claims are then evaluated for
+        trustworthiness. Only those with a high level of credibility are shown
+        on our site. <strong>Click</strong> on the cards below to learn more
+        about how we gather and process this information.
+      </Typography>
 
       {/* A.1 - A.3  */}
       <Grid2
@@ -457,11 +463,14 @@ export default function OurModel() {
         <h1 className="mb-4 text-center text-2xl font-bold">
           Explore claims by topic below
         </h1>
-          <Typography variant="body1" sx={{ width: "80%", textAlign: "justify"  }}>
-              Explore climate-related claims grouped into clusters in our AI model. Each cluster represents a sub-topic, helping you see how different claims are connected. Use the dropdown to filter results, and hover over the dots in the visualization to view individual claims.
-          </Typography>
+        <Typography variant="body1" sx={{ width: "80%", textAlign: "justify" }}>
+          Explore climate-related claims grouped into clusters in our AI model.
+          Each cluster represents a sub-topic, helping you see how different
+          claims are connected. Use the dropdown to filter results, and hover
+          over the dots in the visualization to view individual claims.
+        </Typography>
         {/* Chart */}
-        <div className="flex w-full max-w-[95%] justify-center">
+        <div className="flex w-full max-w-[95%] justify-center p-5">
           <ClaimsChart />
         </div>
       </div>
@@ -476,10 +485,13 @@ export default function OurModel() {
               <h2 className="mb-1 text-xl font-bold">{paper.title}</h2>
               <p className="mb-1 text-gray-700">Authors: {paper.authors}</p>
               <p className="font-bold text-gray-900">Date: {paper.date}</p>
-                <p className="mt-1 text-gray-600" style={{ textAlign: "justify" }}>
-                    {paper.description}
-                </p>
-                <a
+              <p
+                className="mt-1 text-gray-600"
+                style={{ textAlign: "justify" }}
+              >
+                {paper.description}
+              </p>
+              <a
                 href={paper.link || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
