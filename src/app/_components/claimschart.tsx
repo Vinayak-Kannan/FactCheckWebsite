@@ -74,20 +74,21 @@ export function ClaimsChart() {
         if (allClaimsFromQuery.data) {
             const claims = allClaimsFromQuery.data;
             // const clusterColors = new Map<number, string>();
-            const trueFalseColors = new Map<boolean, string>([
-                [true, "green"],
-                [false, "red"]
+            const trueFalseColors = new Map<string, string>([
+                ["True", "green"],
+                ["False", "red"]
             ]);
             // const generateColor = () => `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 1)`;
 
             const filteredClaims = claims.filter(claim =>
                 (selectedCluster === "all" || claim.cluster_name === selectedCluster) &&
-                (selectedTrueFalse === "all" || String(claim.predict) === selectedTrueFalse)
+                (selectedTrueFalse === "all" || String(claim.cleaned_veracity).toLowerCase() === selectedTrueFalse)
             );
 
             const datasets = Object.entries(
                 filteredClaims.reduce((acc: Record<number, { label: string; data: ScatterDataPoint[]; backgroundColor: string[] }>, claim) => {
                     const cluster: number = claim.cluster;
+                    console.log(claim.cleaned_veracity);
                     if (!acc[cluster]) {
                         acc[cluster] = {
                             label: claim.cluster_name,
@@ -102,7 +103,7 @@ export function ClaimsChart() {
                         cleaned_veracity: claim.cleaned_veracity,
                         cleaned_predict_veracity: claim.cleaned_predict_veracity
                     });
-                    acc[cluster].backgroundColor.push(trueFalseColors.get(claim.predict) ?? "gray");
+                    acc[cluster].backgroundColor.push(trueFalseColors.get(claim.cleaned_veracity) ?? "gray");
                     return acc;
                 }, {})
             ).map(([_, dataset]) => dataset);
