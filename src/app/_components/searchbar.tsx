@@ -101,11 +101,7 @@ export function SearchBar() {
       console.error("Failed to submit data", error);
       setIsLoadingInference(false);
       setInferenceResponse({
-        prediction: "error",
-        explanation: "error",
-        similar_claims: "error",
-        claim: "error",
-        cluster_name: "error",
+        claim: {} as Claim,
         is_check_worthy: false,
         check_worthiness_score: 0,
         uuid: "error",
@@ -255,19 +251,6 @@ export function SearchBar() {
           </Typography>
           <Typography color="red">
             Checkworthy Score: {inferenceResponse.check_worthiness_score}
-          </Typography>
-          <Typography color="red">
-            Prediction: {inferenceResponse.prediction}
-          </Typography>
-          <Typography color="red">
-            Explanation: {inferenceResponse.explanation}
-          </Typography>
-          <Typography color="red">
-            Similar Claims: {inferenceResponse.similar_claims}
-          </Typography>
-          <Typography color="red">Claim: {inferenceResponse.claim}</Typography>
-          <Typography color="red">
-            Cluster Name: {inferenceResponse.cluster_name}
           </Typography>
         </Box>
       )}
