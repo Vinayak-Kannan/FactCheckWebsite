@@ -157,6 +157,9 @@ export function FactCheckModal({
                 style={{
                   maxHeight: "500px",
                   overflowY: "auto",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "16px",
                 }}
               >
                 <Typography className="mb-6 text-lg">{claim.text}</Typography>
@@ -166,6 +169,14 @@ export function FactCheckModal({
                   </Box>
                   <Typography variant="h6">Based On Our Model</Typography>
                 </Box>
+                {claim.source != "Prediction from model" && (
+                  <Box className="mb-4 flex items-center gap-4">
+                    <Box className="rounded bg-blue-700 px-8 py-2 text-white">
+                      {claim.cleaned_veracity}
+                    </Box>
+                    <Typography variant="h6">Actual Veracity</Typography>
+                  </Box>
+                )}
               </Box>
             </TabPanel>
 
@@ -199,16 +210,19 @@ export function FactCheckModal({
                     </Typography>
                   </Box>
                 ))}
-                  <Typography variant="h6" className="mt-4 mb-1 font-bold">
-                      Claim Source:
-                  </Typography>
-                  {claim.source.startsWith("http") ? (
-                      <Button href={claim.source} className="text-blue-600 hover:underline">
-                          {claim.source}
-                      </Button>
-                  ) : (
-                      <Typography>{claim.source}</Typography>
-                  )}
+                <Typography variant="h6" className="mb-1 mt-4 font-bold">
+                  Claim Source:
+                </Typography>
+                {claim.source.startsWith("http") ? (
+                  <Button
+                    href={claim.source}
+                    className="text-blue-600 hover:underline"
+                  >
+                    {claim.source}
+                  </Button>
+                ) : (
+                  <Typography>{claim.source}</Typography>
+                )}
               </Box>
             </TabPanel>
           </Box>
