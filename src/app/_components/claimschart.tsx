@@ -21,14 +21,14 @@ const options: ChartOptions<"scatter"> = {
   scales: {
     x: {
       title: {
-        display: true,
-        text: "X coordinate of a embedded claim",
+        display: false,
+        text: "",
       },
     },
     y: {
       title: {
-        display: true,
-        text: "Y coordinate of a embedded claim",
+        display: false,
+        text: "",
       },
     },
   },
