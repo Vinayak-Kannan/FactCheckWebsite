@@ -41,11 +41,7 @@ export interface GetCommunityClaimsResponse {
 }
 
 export interface PostRealTimeInferenceResponse {
-  prediction: string;
-  explanation: string;
-  similar_claims: string;
-  claim: string;
-  cluster_name: string;
+  claim: Claim;
   is_check_worthy: boolean;
   check_worthiness_score: number;
   uuid: string;
@@ -175,6 +171,18 @@ export const postRouter = createTRPCRouter({
   postRealTimeInference: publicProcedure
     .input(z.object({ text: z.string() }))
     .mutation(async ({ input }) => {
+      interface ResponseInterface {
+        prediction: string;
+        explanation: string;
+        similar_claims: string;
+        claim: string;
+        cluster_name: string;
+        is_check_worthy: boolean;
+        check_worthiness_score: number;
+        uuid: string;
+        isFound: boolean;
+      }
+
       const postObject = {
         claim_inference: input.text,
       };
@@ -197,7 +205,7 @@ export const postRouter = createTRPCRouter({
       }
 
       try {
-        const result = (await response.json()) as PostRealTimeInferenceResponse;
+        const result = (await response.json()) as ResponseInterface;
         console.log(result);
 
         if (result.prediction === "1") {
@@ -208,7 +216,28 @@ export const postRouter = createTRPCRouter({
           result.prediction = "Unclassified";
         }
 
-        return result;
+        const cleanedResult: PostRealTimeInferenceResponse = {
+          claim: {
+            text: result.claim,
+            cluster_name: result.cluster_name,
+            x: 0,
+            y: 0,
+            cleaned_veracity: "Unknown",
+            cleaned_predict_veracity: result.prediction,
+            predict: true,
+            cluster: result.prediction === "Unclassified" ? -1 : 1,
+            source: "N/A",
+            id: "N/A - Inference",
+            explanation: result.explanation,
+            similar_claims: result.similar_claims,
+          },
+          is_check_worthy: result.is_check_worthy,
+          check_worthiness_score: result.check_worthiness_score,
+          uuid: result.uuid,
+          isFound: result.isFound,
+        };
+
+        return cleanedResult;
       } catch (error) {
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         throw new Error(`Failed to parse response: ${error}`);
