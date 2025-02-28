@@ -205,8 +205,8 @@ export const postRouter = createTRPCRouter({
       }
 
       try {
-        const result = (await response.json()) as ResponseInterface;
-        console.log(result);
+        const resultText = await response.text();
+        const result = JSON.parse(resultText) as ResponseInterface;
 
         if (result.prediction === "1") {
           result.prediction = "False";
@@ -248,6 +248,17 @@ export const postRouter = createTRPCRouter({
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input }) => {
       const route = process.env.POST_CHECK_INFERENCE_ROUTE ?? "";
+      interface ResponseInterface {
+        prediction: string;
+        explanation: string;
+        similar_claims: string;
+        claim: string;
+        cluster_name: string;
+        is_check_worthy: boolean;
+        check_worthiness_score: number;
+        uuid: string;
+        isFound: boolean;
+      }
 
       const response = await fetch(route, {
         method: "POST",
@@ -260,12 +271,43 @@ export const postRouter = createTRPCRouter({
         }),
       });
 
-      console.log(response);
+      const resultText = await response.text();
+      const result = JSON.parse(resultText) as ResponseInterface;
+      console.log(result);
 
       if (!response.ok) {
         throw new Error(`Failed to fetch data`);
       }
 
-      return (await response.json()) as PostRealTimeInferenceResponse;
+      if (result.prediction === "1") {
+        result.prediction = "False";
+      } else if (result.prediction === "3") {
+        result.prediction = "True";
+      } else if (result.prediction === "3") {
+        result.prediction = "Unclassified";
+      }
+
+      const cleanedResult: PostRealTimeInferenceResponse = {
+        claim: {
+          text: result.claim,
+          cluster_name: result.cluster_name,
+          x: 0,
+          y: 0,
+          cleaned_veracity: "Unknown",
+          cleaned_predict_veracity: result.prediction,
+          predict: true,
+          cluster: result.prediction === "Unclassified" ? -1 : 1,
+          source: "N/A",
+          id: "N/A - Inference",
+          explanation: result.explanation,
+          similar_claims: result.similar_claims,
+        },
+        is_check_worthy: result.is_check_worthy,
+        check_worthiness_score: result.check_worthiness_score,
+        uuid: result.uuid,
+        isFound: result.isFound,
+      };
+
+      return cleanedResult;
     }),
 });
