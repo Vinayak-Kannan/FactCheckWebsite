@@ -138,7 +138,8 @@ export function ClaimsChart() {
           {},
         ),
       ).map(([_, dataset]) => dataset);
-
+      console.log(datasets.length)
+      console.log(datasets)
       setChartData({ datasets });
     }
   }, [allClaimsFromQuery.data, selectedCluster, selectedTrueFalse]);
