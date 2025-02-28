@@ -79,6 +79,7 @@ export function SearchBar() {
       if (!response.is_check_worthy) {
         setIsLoadingInference(false);
         setInferenceResponse(response);
+        console.log(response)
         return response;
       }
 
@@ -96,6 +97,8 @@ export function SearchBar() {
       console.log("Data submitted successfully!");
       setIsLoadingInference(false);
       setInferenceResponse(checkUpdate);
+      console.log(checkUpdate.claim)
+      console.log(typeof checkUpdate.claim)
       setIsModalOpen(true)
       return checkUpdate;
     } catch (error) {

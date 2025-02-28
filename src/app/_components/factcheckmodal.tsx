@@ -213,16 +213,23 @@ export function FactCheckModal({
                 <Typography variant="h6" className="mb-1 mt-4 font-bold">
                   Claim Source:
                 </Typography>
-                {claim.source.startsWith("http") ? (
-                  <Button
-                    href={claim.source}
-                    className="text-blue-600 hover:underline"
-                  >
-                    {claim.source}
-                  </Button>
-                ) : (
-                  <Typography>{claim.source}</Typography>
-                )}
+                {/*{claim.source.startsWith("http") ? (*/}
+                {/*  <Button*/}
+                {/*    href={claim.source}*/}
+                {/*    className="text-blue-600 hover:underline"*/}
+                {/*  >*/}
+                {/*    {claim.source}*/}
+                {/*  </Button>*/}
+                {/*) : (*/}
+                {/*  <Typography>{claim.source}</Typography>*/}
+                {/*)}*/}
+                  {claim?.source?.startsWith("http") ? (
+                      <Button href={claim.source} className="text-blue-600 hover:underline">
+                          {claim.source}
+                      </Button>
+                  ) : (
+                      <Typography>{claim?.source || "No source available"}</Typography>
+                  )}
               </Box>
             </TabPanel>
           </Box>
