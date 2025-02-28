@@ -52,6 +52,13 @@ export function SearchBar() {
       });
       if (uniqueClaims) {
         setMakeRequestForClaims(false);
+
+        uniqueClaims.sort((a, b) => {
+          if (a?.cluster === undefined) return -1;
+          if (b?.cluster === undefined) return 1;
+          return b.cluster - a.cluster;
+        });
+
         setSearchOptions(uniqueClaims);
       }
     }
@@ -94,11 +101,7 @@ export function SearchBar() {
       console.error("Failed to submit data", error);
       setIsLoadingInference(false);
       setInferenceResponse({
-        prediction: "error",
-        explanation: "error",
-        similar_claims: "error",
-        claim: "error",
-        cluster_name: "error",
+        claim: {} as Claim,
         is_check_worthy: false,
         check_worthiness_score: 0,
         uuid: "error",
@@ -114,118 +117,129 @@ export function SearchBar() {
           <CircularProgress />
         </Box>
       )}
-      <Typography variant="h6" sx={{ fontWeight: "bold", fontSize: "18px", marginBottom: "20px" }}>
-        Get the facts on climate change—type a claim to check its accuracy!
+      <Typography
+        variant="h6"
+        sx={{ fontWeight: "bold", fontSize: "18px", marginBottom: "20px" }}
+      >
+        Get the facts on climate change—type below to search for claims and
+        check their accuracy!
       </Typography>
 
-
-      <Button
-        variant="contained"
-        className="w-1/6 bg-blue-700 text-white hover:bg-blue-800"
-        onClick={async () => {
-          if (searchValueInference.length === 0) return;
-          await handleSubmit(searchValueInference);
-        }}
-      >
-        Generate prediction
-        {isLoadingInference && (
-          <CircularProgress size={24} className="ml-2" color="secondary" />
-        )}
-      </Button>
+      {/*<Button*/}
+      {/*  variant="contained"*/}
+      {/*  className="w-1/6 bg-blue-700 text-white hover:bg-blue-800"*/}
+      {/*  onClick={async () => {*/}
+      {/*    if (searchValueInference.length === 0) return;*/}
+      {/*    await handleSubmit(searchValueInference);*/}
+      {/*  }}*/}
+      {/*>*/}
+      {/*  Generate prediction*/}
+      {/*  {isLoadingInference && (*/}
+      {/*    <CircularProgress size={24} className="ml-2" color="secondary" />*/}
+      {/*  )}*/}
+      {/*</Button>*/}
       <Box className="flex w-full max-w-[800px] items-center px-2 py-8">
         <Box className="flex w-full items-center rounded">
           <SearchIcon className="ml-2 text-gray-500" />
           <Autocomplete
-              noOptionsText={
-                "No matches... Check the veracity by clicking the button above!"
+            noOptionsText={
+              "No matches... Check the veracity by clicking the button above!"
+            }
+            fullWidth
+            onInputChange={(_, newInputValue) => {
+              if (newInputValue.length > 0) {
+                setSearchValueInferece(newInputValue);
+                setSearchValue(newInputValue);
               }
-              fullWidth
-              onInputChange={(_, newInputValue) => {
-                if (newInputValue.length > 0) {
-                  setSearchValueInferece(newInputValue);
-                  setSearchValue(newInputValue);
-                }
-                return;
-              }}
-              value={searchValue}
-              filterOptions={filterOptions}
-              options={searchOptions.map((option) => {
-                if (!option) return "";
-                return option.text ?? "";
-              })}
-              onChange={(_, newValue) => {
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-expect-error
-                setSearchValue(newValue! || "");
-                const claim = searchOptions.find((option) => {
-                  if (!option) return false;
-                  return option.text === newValue;
-                });
-                if (!claim) return;
-                setSelectedClaim(claim);
-                setIsModalOpen(true);
-              }}
-              renderInput={(params) => (
-                  <TextField
-                      {...params}
-                      variant="outlined"
-                      placeholder="Try searching for 'hurricane' or 'windmill'"
-                      sx={{
-                        "& .MuiOutlinedInput-root": {
-                          borderColor: "#0B4797",
-                          "& fieldset": { borderColor: "#0B4797", borderWidth: "2px" },
-                          "&:hover fieldset": { borderColor: "#0B4797", borderWidth: "3px" },
-                          "&.Mui-focused fieldset": { borderColor: "#0B4797", borderWidth: "3px" }
-                        }
-                      }}
-                  />
-
-              )}
-              renderOption={(props, option) => {
-                const claim = searchOptions.find((c) => c?.text === option);
-                if (!claim) return null;
-                return (
-                    <li
-                        {...props}
-                        key={claim.text}
-                        className="flex justify-between w-full px-3 py-2"
+              return;
+            }}
+            value={searchValue}
+            filterOptions={filterOptions}
+            options={searchOptions.map((option) => {
+              if (!option) return "";
+              return option.text ?? "";
+            })}
+            onChange={(_, newValue) => {
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-expect-error
+              setSearchValue(newValue! || "");
+              const claim = searchOptions.find((option) => {
+                if (!option) return false;
+                return option.text === newValue;
+              });
+              if (!claim) return;
+              setSelectedClaim(claim);
+              setIsModalOpen(true);
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="outlined"
+                placeholder="Try searching for 'solar' or 'wind'"
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderColor: "#0B4797",
+                    "& fieldset": {
+                      borderColor: "#0B4797",
+                      borderWidth: "2px",
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "#0B4797",
+                      borderWidth: "3px",
+                    },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#0B4797",
+                      borderWidth: "3px",
+                    },
+                  },
+                }}
+              />
+            )}
+            renderOption={(props, option) => {
+              const claim = searchOptions.find((c) => c?.text === option);
+              if (!claim) return null;
+              return (
+                <li
+                  {...props}
+                  key={claim.text}
+                  className="flex w-full justify-between px-3 py-2"
+                >
+                  <Typography variant="body1" className="w-3/5 truncate">
+                    {claim.text}
+                  </Typography>
+                  <Box className="flex w-2/5 justify-end space-x-2">
+                    <Typography
+                      variant="body2"
+                      className="flex w-[80px] flex-shrink-0 items-center justify-center rounded bg-gray-200 px-2 py-1 text-center"
                     >
-                      <Typography variant="body1" className="truncate w-3/5">
-                        {claim.text}
+                      Model: {claim.cleaned_predict_veracity}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      className="flex w-[80px] flex-shrink-0 items-center justify-center rounded bg-gray-300 px-2 py-1 text-center"
+                    >
+                      Truth: {claim.cleaned_veracity}
+                    </Typography>
+                    {claim.source.startsWith("http") ? (
+                      <Button
+                        href={claim.source}
+                        style={{ textTransform: "none" }}
+                        className="w-[80px] flex-shrink-0 justify-start rounded !bg-gray-300 px-2 py-1 normal-case text-black hover:bg-gray-400 focus:outline-none active:bg-gray-500"
+                      >
+                        Source
+                      </Button>
+                    ) : (
+                      <Typography
+                        variant="body2"
+                        className="flex w-[80px] flex-shrink-0 items-center justify-center rounded bg-gray-300 px-2 py-1 text-center"
+                      >
+                        {claim.source}
                       </Typography>
-                      <Box className="flex w-2/5 justify-end space-x-2">
-                        <Typography
-                            variant="body2"
-                            className="bg-gray-200 px-2 py-1 rounded w-[80px] flex items-center justify-center text-center flex-shrink-0"
-                        >
-                          Model: {claim.cleaned_predict_veracity}
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            className="bg-gray-300 px-2 py-1 rounded w-[80px] flex items-center justify-center text-center flex-shrink-0"
-                        >
-                          Truth: {claim.cleaned_veracity}
-                        </Typography>
-                        {claim.source.startsWith("http") ? (
-                            <Button
-                                href={claim.source}
-                                style={{ textTransform: "none" }}
-                                className="!bg-gray-300 px-2 py-1 rounded w-[80px] flex-shrink-0 normal-case hover:bg-gray-400 active:bg-gray-500 focus:outline-none justify-start text-black"
-                            >
-                              Source
-                            </Button>
-                        ) : (
-                            <Typography
-                                variant="body2"
-                                className="bg-gray-300 px-2 py-1 rounded w-[80px] flex items-center justify-center text-center flex-shrink-0"
-                            >
-                              {claim.source}
-                            </Typography>
-                        )}
-                      </Box>
-                    </li>
-                );
-              }}
+                    )}
+                  </Box>
+                </li>
+              );
+            }}
           />
         </Box>
       </Box>
@@ -237,19 +251,6 @@ export function SearchBar() {
           </Typography>
           <Typography color="red">
             Checkworthy Score: {inferenceResponse.check_worthiness_score}
-          </Typography>
-          <Typography color="red">
-            Prediction: {inferenceResponse.prediction}
-          </Typography>
-          <Typography color="red">
-            Explanation: {inferenceResponse.explanation}
-          </Typography>
-          <Typography color="red">
-            Similar Claims: {inferenceResponse.similar_claims}
-          </Typography>
-          <Typography color="red">Claim: {inferenceResponse.claim}</Typography>
-          <Typography color="red">
-            Cluster Name: {inferenceResponse.cluster_name}
           </Typography>
         </Box>
       )}
