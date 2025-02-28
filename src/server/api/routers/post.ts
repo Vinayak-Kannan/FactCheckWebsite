@@ -207,7 +207,6 @@ export const postRouter = createTRPCRouter({
       try {
         const resultText = await response.text();
         const result = JSON.parse(resultText) as ResponseInterface;
-        console.log(result);
 
         if (result.prediction === "1") {
           result.prediction = "False";
