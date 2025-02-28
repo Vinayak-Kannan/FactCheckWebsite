@@ -96,6 +96,7 @@ export function SearchBar() {
       console.log("Data submitted successfully!");
       setIsLoadingInference(false);
       setInferenceResponse(checkUpdate);
+      setIsModalOpen(true)
       return checkUpdate;
     } catch (error) {
       console.error("Failed to submit data", error);
@@ -125,19 +126,20 @@ export function SearchBar() {
         check their accuracy!
       </Typography>
 
-      {/*<Button*/}
-      {/*  variant="contained"*/}
-      {/*  className="w-1/6 bg-blue-700 text-white hover:bg-blue-800"*/}
-      {/*  onClick={async () => {*/}
-      {/*    if (searchValueInference.length === 0) return;*/}
-      {/*    await handleSubmit(searchValueInference);*/}
-      {/*  }}*/}
-      {/*>*/}
-      {/*  Generate prediction*/}
-      {/*  {isLoadingInference && (*/}
-      {/*    <CircularProgress size={24} className="ml-2" color="secondary" />*/}
-      {/*  )}*/}
-      {/*</Button>*/}
+      <Button
+        variant="contained"
+        className="w-1/6 bg-blue-700 text-white hover:bg-blue-800"
+        onClick={async () => {
+          if (searchValueInference.length === 0) return;
+          await handleSubmit(searchValueInference);
+        }}
+      >
+        Generate prediction
+        {isLoadingInference && (
+          <CircularProgress size={24} className="ml-2" color="secondary" />
+        )}
+      </Button>
+
       <Box className="flex w-full max-w-[800px] items-center px-2 py-8">
         <Box className="flex w-full items-center rounded">
           <SearchIcon className="ml-2 text-gray-500" />
@@ -243,17 +245,26 @@ export function SearchBar() {
           />
         </Box>
       </Box>
-      {inferenceResponse && (
-        <Box className="mt-4">
-          <Typography color="red">
-            Is Claim Checkworthy?{" "}
-            {inferenceResponse.is_check_worthy ? "Yes" : "No"}
-          </Typography>
-          <Typography color="red">
-            Checkworthy Score: {inferenceResponse.check_worthiness_score}
-          </Typography>
-        </Box>
-      )}
+
+      {inferenceResponse ? (
+      inferenceResponse?.is_check_worthy ?
+          <FactCheckModal
+              open={isModalOpen}
+              claim={inferenceResponse.claim}
+              onCloseAction={() => setIsModalOpen(false)}
+          />
+          :
+          <Box className="mt-4">
+            <Typography color="red">
+              Is Claim Checkworthy?{" "}
+              {inferenceResponse.is_check_worthy ? "Yes" : "No"}
+            </Typography>
+            <Typography color="red">
+              Checkworthy Score: {inferenceResponse.check_worthiness_score}
+            </Typography>
+          </Box>
+      ): null}
+
       {selectedClaim && (
         <FactCheckModal
           open={isModalOpen}
