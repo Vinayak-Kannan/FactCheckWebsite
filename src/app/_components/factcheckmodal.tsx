@@ -141,6 +141,7 @@ export function FactCheckModal({
             <Tab label="Fact Check" {...a11yProps(0)} />
             <Tab label="Explanation" {...a11yProps(1)} />
             <Tab label="Similar Claims" {...a11yProps(2)} />
+              <Tab label="Rate Claims" {...a11yProps(3)} />
           </Tabs>
 
           <Box
@@ -232,6 +233,22 @@ export function FactCheckModal({
                   )}
               </Box>
             </TabPanel>
+
+              <TabPanel value={value} index={3}>
+                  <Box className="mb-6 space-y-4">
+                      <Typography className="text-xl font-bold text-black">
+                          {"Help us make this website even "} <strong>better</strong>{"!"} <br />
+                          {"Rate more claims and shape a more "} <strong>reliable</strong>{" and "} <strong>insightful</strong>{" platform!"} <br />
+                          {"Just click the button below! "}
+                      </Typography>
+                      <Button
+                          href="/community"
+                          className="!bg-blue-600 !text-white px-4 rounded-lg">
+                          Rate claims
+                      </Button>
+                  </Box>
+              </TabPanel>
+
           </Box>
         </Box>
       </Box>
