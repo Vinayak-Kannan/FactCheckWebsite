@@ -20,12 +20,18 @@ const options: ChartOptions<"scatter"> = {
   responsive: true,
   scales: {
     x: {
+      ticks: {
+        display: false,
+      },
       title: {
         display: false,
         text: "",
       },
     },
     y: {
+      ticks: {
+        display: false,
+      },
       title: {
         display: false,
         text: "",
