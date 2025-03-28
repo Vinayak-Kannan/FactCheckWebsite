@@ -8,6 +8,7 @@ import { ClaimsChart } from "../_components/claimschart";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Divider from "@mui/material/Divider";
+import { motion } from "framer-motion";
 
 export default function OurModel() {
   const [expanded1, setExpanded1] = useState(false);
@@ -292,169 +293,167 @@ export default function OurModel() {
       </Grid2>
 
       {/* new content after click A.1 */}
-      {expanded1 && (
-        <>
-          <div className="mt-10 h-[1px] w-full bg-black"></div>
+        {expanded1 && (
+            <>
+                <div className="mt-10 h-[1px] w-full bg-black"></div>
 
-          {/* B-G: */}
-          <Grid2
-            container
-            spacing={6}
-            justifyContent="flex-start"
-            className="w-full justify-center px-4 pt-10"
-          >
-            {expandedModelSteps.map((step, index) => (
-              <Grid2 key={step.id} width="22%" sx={{ position: "relative" }}>
-                <Card className="flex min-h-[150px] w-full flex-col items-center justify-between rounded-lg p-4 text-center shadow-xl">
-                  <CardContent className="flex w-full flex-col items-center">
-                    <Typography variant="h6" className="font-bold">
-                      {step.id}
-                    </Typography>
-                    <Typography variant="body1">{step.title}</Typography>
-                    <Typography variant="body2" className="text-gray-500">
-                      {step.subtitle}
-                    </Typography>
-                  </CardContent>
-                  <Divider className="my-2 w-full" />
-                  <CardContent className="w-full rounded-md bg-black p-3 text-sm text-white">
-                    {step.tooltip}
-                  </CardContent>
-                </Card>
-                {index !== expandedModelSteps.length - 1 && (
-                  <svg
-                    width="60"
-                    height="10"
-                    viewBox="0 0 80 10"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="absolute right-[-64px] top-[calc(50%-5px)] -translate-y-1/2 transform"
-                  >
-                    <line
-                      x1="0"
-                      y1="5"
-                      x2="40"
-                      y2="5"
-                      stroke="black"
-                      strokeWidth="4"
-                    />
-                    <polygon points="40,0 58,5 40,10" fill="black" />
-                  </svg>
-                )}
-              </Grid2>
-            ))}
-          </Grid2>
-        </>
-      )}
+                {/* B-G: */}
+                <Grid2
+                    container
+                    spacing={6}
+                    justifyContent="flex-start"
+                    className="w-full justify-center px-4 pt-10"
+                >
+                    {expandedModelSteps.map((step, index) => (
+                        <Grid2 key={step.id} width="22%" sx={{ position: "relative" }}>
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 1.0, delay: index * 0.8 }} // Card appears with delay
+                            >
+                                <Card className="flex min-h-[150px] w-full flex-col items-center justify-between rounded-lg p-4 text-center shadow-xl">
+                                    <CardContent className="flex w-full flex-col items-center">
+                                        <Typography variant="h6" className="font-bold">{step.id}</Typography>
+                                        <Typography variant="body1">{step.title}</Typography>
+                                        <Typography variant="body2" className="text-gray-500">
+                                            {step.subtitle}
+                                        </Typography>
+                                    </CardContent>
+                                    <Divider className="my-2 w-full" />
+                                    <CardContent className="w-full rounded-md bg-black p-3 text-sm text-white">
+                                        {step.tooltip}
+                                    </CardContent>
+                                </Card>
+                            </motion.div>
 
-      {/* new content after click A.2 */}
-      {expanded2 && (
-        <>
-          <div className="mt-10 h-[1px] w-full bg-black"></div>
+                            {/* arrow */}
+                            {index !== expandedModelSteps.length - 1 && (
+                                <motion.div
+                                    initial={{ opacity: 0, x: 20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ duration: 1.0, delay: index * 0.8 + 0.5 }} // appears after the card
+                                    className="absolute right-[-64px] top-[calc(50%-5px)] -translate-y-1/2 transform"
+                                >
+                                    <svg width="60" height="10" viewBox="0 0 80 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <line x1="0" y1="5" x2="40" y2="5" stroke="black" strokeWidth="4" />
+                                        <polygon points="40,0 58,5 40,10" fill="black" />
+                                    </svg>
+                                </motion.div>
+                            )}
+                        </Grid2>
+                    ))}
+                </Grid2>
+            </>
+        )}
 
-          {/* B-G: */}
-          <Grid2
-            container
-            spacing={6}
-            justifyContent="flex-start"
-            className="w-full justify-center px-4 pt-10"
-          >
-            {expandedModelSteps2.map((step, index) => (
-              <Grid2 key={step.id} width="22%" sx={{ position: "relative" }}>
-                <Card className="flex min-h-[150px] w-full flex-col items-center justify-between rounded-lg p-4 text-center shadow-xl">
-                  <CardContent className="flex w-full flex-col items-center">
-                    <Typography variant="h6" className="font-bold">
-                      {step.id}
-                    </Typography>
-                    <Typography variant="body1">{step.title}</Typography>
-                    <Typography variant="body2" className="text-gray-500">
-                      {step.subtitle}
-                    </Typography>
-                  </CardContent>
-                  <Divider className="my-2 w-full" />
-                  <CardContent className="w-full rounded-md bg-black p-3 text-sm text-white">
-                    {step.tooltip}
-                  </CardContent>
-                </Card>
-                {index !== expandedModelSteps2.length - 1 && (
-                  <svg
-                    width="60"
-                    height="10"
-                    viewBox="0 0 80 10"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="absolute right-[-64px] top-[calc(50%-5px)] -translate-y-1/2 transform"
-                  >
-                    <line
-                      x1="0"
-                      y1="5"
-                      x2="40"
-                      y2="5"
-                      stroke="black"
-                      strokeWidth="4"
-                    />
-                    <polygon points="40,0 58,5 40,10" fill="black" />
-                  </svg>
-                )}
-              </Grid2>
-            ))}
-          </Grid2>
-        </>
-      )}
+
+        {/* new content after click A.2 */}
+        {expanded2 && (
+            <>
+                <div className="mt-10 h-[1px] w-full bg-black"></div>
+
+                {/* B-G: */}
+                <Grid2
+                    container
+                    spacing={6}
+                    justifyContent="flex-start"
+                    className="w-full justify-center px-4 pt-10"
+                >
+                    {expandedModelSteps2.map((step, index) => (
+                        <Grid2 key={step.id} width="22%" sx={{ position: "relative" }}>
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 1.0, delay: index * 0.8 }} // Card appears with delay
+                            >
+                                <Card className="flex min-h-[150px] w-full flex-col items-center justify-between rounded-lg p-4 text-center shadow-xl">
+                                    <CardContent className="flex w-full flex-col items-center">
+                                        <Typography variant="h6" className="font-bold">{step.id}</Typography>
+                                        <Typography variant="body1">{step.title}</Typography>
+                                        <Typography variant="body2" className="text-gray-500">
+                                            {step.subtitle}
+                                        </Typography>
+                                    </CardContent>
+                                    <Divider className="my-2 w-full" />
+                                    <CardContent className="w-full rounded-md bg-black p-3 text-sm text-white">
+                                        {step.tooltip}
+                                    </CardContent>
+                                </Card>
+                            </motion.div>
+
+                            {/* arrow */}
+                            {index !== expandedModelSteps2.length - 1 && (
+                                <motion.div
+                                    initial={{ opacity: 0, x: 20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ duration: 1.0, delay: index * 0.8 + 0.5 }} // appears after the card
+                                    className="absolute right-[-64px] top-[calc(50%-5px)] -translate-y-1/2 transform"
+                                >
+                                    <svg width="60" height="10" viewBox="0 0 80 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <line x1="0" y1="5" x2="40" y2="5" stroke="black" strokeWidth="4" />
+                                        <polygon points="40,0 58,5 40,10" fill="black" />
+                                    </svg>
+                                </motion.div>
+                            )}
+                        </Grid2>
+                    ))}
+                </Grid2>
+            </>
+        )}
 
       {/* new content after click A.3 */}
-      {expanded3 && (
-        <>
-          <div className="mt-10 h-[1px] w-full bg-black"></div>
+        {expanded3 && (
+            <>
+                <div className="mt-10 h-[1px] w-full bg-black"></div>
 
-          {/* B-G: */}
-          <Grid2
-            container
-            spacing={6}
-            justifyContent="flex-start"
-            className="w-full justify-center px-4 pt-10"
-          >
-            {expandedModelSteps3.map((step, index) => (
-              <Grid2 key={step.id} width="22%" sx={{ position: "relative" }}>
-                <Card className="flex min-h-[150px] w-full flex-col items-center justify-between rounded-lg p-4 text-center shadow-xl">
-                  <CardContent className="flex w-full flex-col items-center">
-                    <Typography variant="h6" className="font-bold">
-                      {step.id}
-                    </Typography>
-                    <Typography variant="body1">{step.title}</Typography>
-                    <Typography variant="body2" className="text-gray-500">
-                      {step.subtitle}
-                    </Typography>
-                  </CardContent>
-                  <Divider className="my-2 w-full" />
-                  <CardContent className="w-full rounded-md bg-black p-3 text-sm text-white">
-                    {step.tooltip}
-                  </CardContent>
-                </Card>
-                {index !== expandedModelSteps3.length - 1 && (
-                  <svg
-                    width="60"
-                    height="10"
-                    viewBox="0 0 80 10"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="absolute right-[-64px] top-[calc(50%-5px)] -translate-y-1/2 transform"
-                  >
-                    <line
-                      x1="0"
-                      y1="5"
-                      x2="40"
-                      y2="5"
-                      stroke="black"
-                      strokeWidth="4"
-                    />
-                    <polygon points="40,0 58,5 40,10" fill="black" />
-                  </svg>
-                )}
-              </Grid2>
-            ))}
-          </Grid2>
-        </>
-      )}
+                {/* B-G: */}
+                <Grid2
+                    container
+                    spacing={6}
+                    justifyContent="flex-start"
+                    className="w-full justify-center px-4 pt-10"
+                >
+                    {expandedModelSteps3.map((step, index) => (
+                        <Grid2 key={step.id} width="22%" sx={{ position: "relative" }}>
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 1.0, delay: index * 0.8 }} // Card appears with delay
+                            >
+                                <Card className="flex min-h-[150px] w-full flex-col items-center justify-between rounded-lg p-4 text-center shadow-xl">
+                                    <CardContent className="flex w-full flex-col items-center">
+                                        <Typography variant="h6" className="font-bold">{step.id}</Typography>
+                                        <Typography variant="body1">{step.title}</Typography>
+                                        <Typography variant="body2" className="text-gray-500">
+                                            {step.subtitle}
+                                        </Typography>
+                                    </CardContent>
+                                    <Divider className="my-2 w-full" />
+                                    <CardContent className="w-full rounded-md bg-black p-3 text-sm text-white">
+                                        {step.tooltip}
+                                    </CardContent>
+                                </Card>
+                            </motion.div>
+
+                            {/* arrow */}
+                            {index !== expandedModelSteps3.length - 1 && (
+                                <motion.div
+                                    initial={{ opacity: 0, x: 20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ duration: 1.0, delay: index * 0.8 + 0.5 }} // appears after the card
+                                    className="absolute right-[-64px] top-[calc(50%-5px)] -translate-y-1/2 transform"
+                                >
+                                    <svg width="60" height="10" viewBox="0 0 80 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <line x1="0" y1="5" x2="40" y2="5" stroke="black" strokeWidth="4" />
+                                        <polygon points="40,0 58,5 40,10" fill="black" />
+                                    </svg>
+                                </motion.div>
+                            )}
+                        </Grid2>
+                    ))}
+                </Grid2>
+            </>
+        )}
 
       {/* The line */}
       <div className="mt-10 h-[1px] w-full bg-black"></div>
