@@ -20,12 +20,18 @@ const options: ChartOptions<"scatter"> = {
   responsive: true,
   scales: {
     x: {
+      ticks: {
+        display: false,
+      },
       title: {
         display: false,
         text: "",
       },
     },
     y: {
+      ticks: {
+        display: false,
+      },
       title: {
         display: false,
         text: "",
@@ -138,7 +144,8 @@ export function ClaimsChart() {
           {},
         ),
       ).map(([_, dataset]) => dataset);
-
+      console.log(datasets.length)
+      console.log(datasets)
       setChartData({ datasets });
     }
   }, [allClaimsFromQuery.data, selectedCluster, selectedTrueFalse]);

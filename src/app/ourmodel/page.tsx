@@ -266,6 +266,8 @@ export default function OurModel() {
                 backgroundColor:
                   selectedStepId === step.id ? "#2449A8" : "white",
                 color: selectedStepId === step.id ? "white" : "black",
+                opacity: selectedStepId === null ? 1 : selectedStepId === step.id ? 1 : 0.3,
+  
               }}
               className="flex min-h-[150px] w-full flex-col items-center justify-between rounded-lg p-4 text-center shadow-xl"
             >
