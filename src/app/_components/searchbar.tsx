@@ -268,7 +268,7 @@ export function SearchBar() {
                             <TextField
                                 {...params}
                                 variant="outlined"
-                                placeholder="Try searching for 'solar' or 'wind'"
+                                placeholder="Is it true that..."
                                 sx={{
                                     "& .MuiOutlinedInput-root": {
                                         borderColor: "#0B4797",
@@ -288,21 +288,30 @@ export function SearchBar() {
                                     key={claim.text}
                                     className="flex w-full justify-between px-3 py-2"
                                 >
-                                    <Typography variant="body1" className="w-3/5 truncate">
+                                    <Typography variant="body1" className="w-3/5">
                                         {claim.text}
                                     </Typography>
+
                                     <Box className="flex w-2/5 justify-end space-x-2">
                                         <Typography
                                             variant="body2"
-                                            className="flex w-[80px] flex-shrink-0 items-center justify-center rounded bg-gray-200 px-2 py-1 text-center"
+                                            className={`flex w-[90px] flex-shrink-0 items-center justify-center rounded px-2 py-1 text-center ${
+                                                claim.cleaned_predict_veracity?.toLowerCase() === "true"
+                                                    ? "bg-blue-100 text-blue-800 border border-blue-300"
+                                                    : "bg-blue-50 text-blue-600 border border-blue-200"
+                                            }`}
                                         >
-                                            Model: {claim.cleaned_predict_veracity}
+                                            Prediction: {claim.cleaned_predict_veracity}
                                         </Typography>
                                         <Typography
                                             variant="body2"
-                                            className="flex w-[80px] flex-shrink-0 items-center justify-center rounded bg-gray-300 px-2 py-1 text-center"
+                                            className={`flex w-[100px] flex-shrink-0 items-center justify-center rounded px-2 py-1 text-center font-semibold ${
+                                                claim.cleaned_veracity?.toLowerCase() === "true"
+                                                    ? "bg-green-200 text-green-900 border border-green-300"
+                                                    : "bg-red-200 text-red-900 border border-red-300"
+                                            }`}
                                         >
-                                            Truth: {claim.cleaned_veracity}
+                                            Ground Truth: {claim.cleaned_veracity}
                                         </Typography>
                                         {claim.source.startsWith("http") ? (
                                             <Button
