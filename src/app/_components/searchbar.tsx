@@ -20,9 +20,7 @@ import {
 } from "~/server/api/routers/post";
 import PropTypes from "prop-types";
 
-interface CircularProgressWithLabelProps extends CircularProgressProps {
-    value: number;
-}
+interface CircularProgressWithLabelProps extends CircularProgressProps {value: number;}
 
 function CircularProgressWithLabel(props: CircularProgressWithLabelProps) {
     return (
@@ -64,9 +62,14 @@ export function SearchBar() {
     const [searchOptions, setSearchOptions] = useState<(Claim | undefined)[]>([]);
     const [filteredOptions, setFilteredOptions] = useState<string[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedClaim, setSelectedClaim] = useState<Claim | undefined>(undefined);
-    const [makeRequestForClaims, setMakeRequestForClaims] = useState(searchOptions.length === 0);
-    const [inferenceResponse, setInferenceResponse] = useState<PostRealTimeInferenceResponse | null>(null);
+    const [selectedClaim, setSelectedClaim] = useState<Claim | undefined>(
+        undefined,
+    );
+    const [makeRequestForClaims, setMakeRequestForClaims] = useState(
+        searchOptions.length === 0,
+    );
+    const [inferenceResponse, setInferenceResponse] =
+        useState<PostRealTimeInferenceResponse | null>(null);
     const [isLoadingInference, setIsLoadingInference] = useState(false);
 
     const options = api.post.listClaims.useQuery(undefined, {
@@ -74,6 +77,7 @@ export function SearchBar() {
     });
 
     useEffect(() => {
+        // Filter options.data to the unique claims using text
         if (options.data) {
             const uniqueClaims = Array.from(
                 new Set(options.data.map((claim) => claim.text)),
@@ -116,10 +120,17 @@ export function SearchBar() {
             return checkUpdate;
         } catch (error) {
             console.error("Failed to submit data", error);
-            setIsLoadingInference(false);
+            setInferenceResponse({
+                claim: {} as Claim,
+                is_check_worthy: false,
+                check_worthiness_score: 0,
+                uuid: "error",
+                isFound: false,
+            });
         }
     };
 
+    // State for progress bar
     const handleFilterOptions = () => {
         const filtered = searchOptions
             .filter((opt) => opt?.text.toLowerCase().includes(inputText.toLowerCase()))
@@ -132,9 +143,12 @@ export function SearchBar() {
     const [showText, setShowText] = useState(false);
     const [showProgressBar, setShowProgressBar] = useState(false);
 
+    // Effect to handle progress update
     useEffect(() => {
         if (isLoadingInference) {
-            const delayShowProgress = setTimeout(() => setShowProgressBar(true), 1500);
+            const delayShowProgress = setTimeout(() => {
+                setShowProgressBar(true);
+            }, 1500);
             setProgress(0);
             let timeElapsed = 0;
             const interval = setInterval(() => {
@@ -144,31 +158,46 @@ export function SearchBar() {
                     return Math.min(100, newProgress);
                 });
                 timeElapsed += 0.5;
-                if (timeElapsed >= 4) setShowText(true);
+                if (timeElapsed >= 4) {
+                    setShowText(true);
+                }
             }, 1500);
             return () => {
                 clearTimeout(delayShowProgress);
                 clearInterval(interval);
             };
         } else {
-            const hideTimeout = setTimeout(() => setShowProgressBar(false), 300);
+            const hideTimeout = setTimeout(() => {
+                setShowProgressBar(false);
+            }, 300);
             return () => clearTimeout(hideTimeout);
         }
     }, [isLoadingInference]);
 
+
+
+
+
+// At the end of isLoadingInference make sure progress to be 100
     useEffect(() => {
-        if (!isLoadingInference) setProgress(100);
+        if (!isLoadingInference) {
+            setProgress(100);
+        }
     }, [isLoadingInference]);
+
 
     return (
         <Box className="flex h-screen w-full flex-col items-center bg-white pt-[80px]">
             {searchOptions.length === 0 && (
                 <Box className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-75">
-                    <CircularProgress/>
+                    <CircularProgress />
                 </Box>
             )}
 
-            <Typography variant="h6" sx={{fontWeight: "bold", fontSize: "18px", marginBottom: "20px"}}>
+            <Typography
+                variant="h6"
+                sx={{ fontWeight: "bold", fontSize: "18px", marginBottom: "20px" }}
+            >
                 Get the facts on climate change—type below to search for claims and check their accuracy!
             </Typography>
 
@@ -187,7 +216,7 @@ export function SearchBar() {
             >
                 Generate prediction
                 {isLoadingInference && (
-                    <CircularProgress size={24} className="ml-2" color="secondary"/>
+                    <CircularProgress size={24} className="ml-2" color="secondary" />
                 )}
             </Button>
 
@@ -215,6 +244,16 @@ export function SearchBar() {
                         renderInput={(params) => (
                             <TextField
                                 {...params}
+                                variant="outlined"
+                                placeholder="Try searching for 'solar' or 'wind'"
+                                sx={{
+                                    "& .MuiOutlinedInput-root": {
+                                        borderColor: "#0B4797",
+                                        "& fieldset": { borderColor: "#0B4797", borderWidth: "2px" },
+                                        "&:hover fieldset": { borderColor: "#0B4797", borderWidth: "3px" },
+                                        "&.Mui-focused fieldset": { borderColor: "#0B4797", borderWidth: "3px" },
+                                    },
+                                }}
                                 onKeyDown={(event) => {
                                     if (event.key === "Enter" && inputText.trim() !== "") {
                                         event.preventDefault();
@@ -222,9 +261,53 @@ export function SearchBar() {
                                         handleFilterOptions();
                                     }
                                 }}
-                                placeholder="Try searching for 'solar' or 'wind'"
                             />
                         )}
+                        renderOption={(props, option) => {
+                            const claim = searchOptions.find((c) => c?.text === option);
+                            if (!claim) return null;
+                            return (
+                                <li
+                                    {...props}
+                                    key={claim.text}
+                                    className="flex w-full justify-between px-3 py-2"
+                                >
+                                    <Typography variant="body1" className="w-3/5 truncate">
+                                        {claim.text}
+                                    </Typography>
+                                    <Box className="flex w-2/5 justify-end space-x-2">
+                                        <Typography
+                                            variant="body2"
+                                            className="flex w-[80px] flex-shrink-0 items-center justify-center rounded bg-gray-200 px-2 py-1 text-center"
+                                        >
+                                            Model: {claim.cleaned_predict_veracity}
+                                        </Typography>
+                                        <Typography
+                                            variant="body2"
+                                            className="flex w-[80px] flex-shrink-0 items-center justify-center rounded bg-gray-300 px-2 py-1 text-center"
+                                        >
+                                            Truth: {claim.cleaned_veracity}
+                                        </Typography>
+                                        {claim.source.startsWith("http") ? (
+                                            <Button
+                                                href={claim.source}
+                                                style={{ textTransform: "none" }}
+                                                className="w-[80px] flex-shrink-0 justify-start rounded !bg-gray-300 px-2 py-1 normal-case text-black hover:bg-gray-400 focus:outline-none active:bg-gray-500"
+                                            >
+                                                Source
+                                            </Button>
+                                        ) : (
+                                            <Typography
+                                                variant="body2"
+                                                className="flex w-[80px] flex-shrink-0 items-center justify-center rounded bg-gray-300 px-2 py-1 text-center"
+                                            >
+                                                {claim.source}
+                                            </Typography>
+                                        )}
+                                    </Box>
+                                </li>
+                            );
+                        }}
                     />
                     <Button
                         variant="contained"
@@ -242,13 +325,13 @@ export function SearchBar() {
             </Box>
 
             {showProgressBar && (
-                <Box sx={{width: "100%", maxWidth: "800px", mt: 2, textAlign: "center"}}>
-                    <CircularProgressWithLabel value={progress}/>
+                <Box sx={{ width: "100%", maxWidth: "800px", mt: 2, textAlign: "center" }}>
+                    <CircularProgressWithLabel value={progress} />
                     {showText && (
                         <Typography
                             variant="h6"
                             color="textSecondary"
-                            sx={{mt: 1, fontWeight: "bold", textAlign: "center"}}
+                            sx={{ mt: 1, fontWeight: "bold", textAlign: "center" }}
                         >
                             Please wait for about 30 seconds, our model is analyzing the claim...
                         </Typography>
@@ -256,6 +339,17 @@ export function SearchBar() {
                 </Box>
             )}
 
+            {/*{inferenceResponse && (*/}
+            {/*    <Box className="mt-4">*/}
+            {/*      <Typography color="red">*/}
+            {/*        Is Claim Checkworthy?{" "}*/}
+            {/*        {inferenceResponse.is_check_worthy ? "Yes" : "No"}*/}
+            {/*      </Typography>*/}
+            {/*      <Typography color="red">*/}
+            {/*        Checkworthy Score: {inferenceResponse.check_worthiness_score}*/}
+            {/*      </Typography>*/}
+            {/*    </Box>*/}
+            {/*)}*/}
             {inferenceResponse && (
                 inferenceResponse.is_check_worthy ? (
                     <FactCheckModal
@@ -336,7 +430,7 @@ export function SearchBar() {
             </Box>
 
             {selectedClaim && (
-                <FactCheckModal open={isModalOpen} claim={selectedClaim} onCloseAction={() => setIsModalOpen(false)}/>
+                <FactCheckModal open={isModalOpen} claim={selectedClaim} onCloseAction={() => setIsModalOpen(false)} />
             )}
         </Box>
     );
