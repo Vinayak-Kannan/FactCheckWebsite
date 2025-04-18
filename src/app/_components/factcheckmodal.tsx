@@ -140,7 +140,7 @@ export function FactCheckModal({
           >
             <Tab label="Fact Check" {...a11yProps(0)} />
             <Tab label="Explanation" {...a11yProps(1)} />
-            <Tab label="Similar Claims" {...a11yProps(2)} />
+            <Tab label="Information Source" {...a11yProps(2)} />
               <Tab label="Rate Claims" {...a11yProps(3)} />
           </Tabs>
 
@@ -189,50 +189,44 @@ export function FactCheckModal({
               </Box>
             </TabPanel>
 
-            <TabPanel value={value} index={2}>
-              <Typography variant="h6" className="mb-2 font-bold">
-                Similar Claims:
-              </Typography>
-              <Box
-                className="overflow-y-scroll"
-                style={{
-                  maxHeight: "400px",
-                  overflowY: "auto",
-                }}
-              >
-                {similarClaimsList.map((similarClaim, index) => (
-                  <Box key={index} className="mb-2 rounded border p-2">
-                    <Typography>
-                      <strong>Claim:</strong> {similarClaim.text}
-                    </Typography>
-                    <Typography>
-                      <strong>Predicted Veracity:</strong>{" "}
-                      {similarClaim.cleaned_predict_veracity}
-                    </Typography>
+              <TabPanel value={value} index={2}>
+                  <Box
+                      className="overflow-y-scroll"
+                      style={{
+                          maxHeight: "400px",
+                          overflowY: "auto",
+                      }}
+                  >
+                      {/* Claim Source */}
+                      <Typography variant="h6" className="mb-2 font-bold">
+                          Claim Source:
+                      </Typography>
+                      {claim?.source?.startsWith("http") ? (
+                          <Button href={claim.source} className="text-blue-600 hover:underline mb-4">
+                              {claim.source}
+                          </Button>
+                      ) : (
+                          <Typography className="mb-4">{claim?.source || "No source available"}</Typography>
+                      )}
+
+                      {/* Similar Claims */}
+                      <Typography variant="h6" className="mb-2 font-bold">
+                          Similar Claims:
+                      </Typography>
+                      {similarClaimsList.map((similarClaim, index) => (
+                          <Box key={index} className="mb-2 rounded border p-2">
+                              <Typography>
+                                  <strong>Claim:</strong> {similarClaim.text}
+                              </Typography>
+                              <Typography>
+                                  <strong>Predicted Veracity:</strong>{" "}
+                                  {similarClaim.cleaned_predict_veracity}
+                              </Typography>
+                          </Box>
+                      ))}
                   </Box>
-                ))}
-                <Typography variant="h6" className="mb-1 mt-4 font-bold">
-                  Claim Source:
-                </Typography>
-                {/*{claim.source.startsWith("http") ? (*/}
-                {/*  <Button*/}
-                {/*    href={claim.source}*/}
-                {/*    className="text-blue-600 hover:underline"*/}
-                {/*  >*/}
-                {/*    {claim.source}*/}
-                {/*  </Button>*/}
-                {/*) : (*/}
-                {/*  <Typography>{claim.source}</Typography>*/}
-                {/*)}*/}
-                  {claim?.source?.startsWith("http") ? (
-                      <Button href={claim.source} className="text-blue-600 hover:underline">
-                          {claim.source}
-                      </Button>
-                  ) : (
-                      <Typography>{claim?.source || "No source available"}</Typography>
-                  )}
-              </Box>
-            </TabPanel>
+              </TabPanel>
+
 
               <TabPanel value={value} index={3}>
                   <Box className="mb-6 space-y-4">
@@ -244,7 +238,7 @@ export function FactCheckModal({
                       <Button
                           href="/community"
                           className="!bg-blue-600 !text-white px-4 rounded-lg">
-                          Rate claims
+                          Evaluate This Claim
                       </Button>
                   </Box>
               </TabPanel>
