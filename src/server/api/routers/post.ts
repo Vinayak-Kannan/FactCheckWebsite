@@ -14,6 +14,11 @@ const posts: Post[] = [
   },
 ];
 
+const getPairedClaimInput = z.object({
+  originalClaim: z.string(),
+  originalId: z.number().or(z.string()), // 支持数字或字符串ID
+});
+
 // Actual interfaces
 export interface Claim {
   text: string;
@@ -145,6 +150,45 @@ export const postRouter = createTRPCRouter({
     };
     return data;
   }),
+
+
+
+  getPairedClaim: publicProcedure
+      .input(getPairedClaimInput)
+      .query(async ({ input }) => {
+        interface response {
+          message: string;
+          original_claim: ClaimComparison;
+          paired_claim: ClaimComparison;
+        }
+
+        const route = process.env.GET_PAIRED_CLAIM_ROUTE ?? "";
+
+        const response = await fetch(route, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Origin: "https://wefactcheck-994733.webflow.io",
+          },
+          body: JSON.stringify({
+            originalClaim: input.originalClaim,
+            originalId: input.originalId
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch paired claim data`);
+        }
+
+        const result = (await response.json()) as response;
+
+        const data: GetCommunityClaimsResponse = {
+          unclassified_claim: result.original_claim,
+          paired_claim: result.paired_claim,
+        };
+        return data;
+      }),
+
 
   postHumanInput: publicProcedure
     .input(

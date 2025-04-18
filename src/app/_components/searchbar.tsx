@@ -9,6 +9,8 @@ import {
   CircularProgress,
   Button,
   Typography,
+  Alert,
+  Snackbar,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { api } from "~/trpc/react";
@@ -32,6 +34,8 @@ export function SearchBar() {
   const [inferenceResponse, setInferenceResponse] =
     useState<PostRealTimeInferenceResponse | null>(null);
   const [isLoadingInference, setIsLoadingInference] = useState(false);
+  const [timeoutError, setTimeoutError] = useState(false);
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
 
   const filterOptions = createFilterOptions({
     matchFrom: "any",
@@ -64,12 +68,33 @@ export function SearchBar() {
     }
   }, [options.data]);
 
+  // Clear timeout when component unmounts
+  useEffect(() => {
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [timeoutId]);
+
   const mutation = api.post.postRealTimeInference.useMutation();
 
   const query = api.post.getRealTimeInferenceUpdate.useMutation();
 
   const handleSubmit = async (claim: string) => {
     setIsLoadingInference(true);
+    setTimeoutError(false);
+    const abortController = new AbortController();
+
+    // Set a timeout of 60 seconds (1 minute)
+    const timeout = setTimeout(() => {
+      abortController.abort();
+      setTimeoutError(true);
+      setIsLoadingInference(false);
+    }, 60000);
+
+    setTimeoutId(timeout);
+
     try {
       console.log("Starting submit...");
       const response: PostRealTimeInferenceResponse =
@@ -77,6 +102,8 @@ export function SearchBar() {
           text: claim,
         });
       if (!response.is_check_worthy) {
+        clearTimeout(timeout);
+        setTimeoutId(null);
         setIsLoadingInference(false);
         setInferenceResponse(response);
         console.log(response)
@@ -86,23 +113,51 @@ export function SearchBar() {
       let checkUpdate = await query.mutateAsync({
         id: response.uuid,
       });
-      while (checkUpdate.isFound === false) {
+
+      let retryCount = 0;
+      const maxRetries = 15; // Approximately 1 minute with 4-second intervals
+
+
+      while (checkUpdate.isFound === false  && retryCount < maxRetries && !abortController.signal.aborted) {
         console.log("Waiting for update...");
         await new Promise((resolve) => setTimeout(resolve, 4000));
+
+
         checkUpdate = await query.mutateAsync({
           id: response.uuid,
         });
+        retryCount++;
+
+
+        if (abortController.signal.aborted) {
+          break;
+        }
+      }
+      clearTimeout(timeout);
+      setTimeoutId(null);
+
+      if (abortController.signal.aborted || (retryCount >= maxRetries && !checkUpdate.isFound)) {
+        setTimeoutError(true);
+        setIsLoadingInference(false);
+        return;
       }
 
       console.log("Data submitted successfully!");
       setIsLoadingInference(false);
       setInferenceResponse(checkUpdate);
       console.log(checkUpdate.claim)
-      console.log(typeof checkUpdate.claim)
+      console.log(abortController.signal.aborted)
+      console.log(typeof abortController.signal.aborted); // 应该输出 "boolean"
+      if (abortController.signal.aborted) {
+        return;
+      }
+
       setIsModalOpen(true)
       return checkUpdate;
     } catch (error) {
       console.error("Failed to submit data", error);
+      clearTimeout(timeout);
+      setTimeoutId(null);
       setIsLoadingInference(false);
       setInferenceResponse({
         claim: {} as Claim,
@@ -112,6 +167,11 @@ export function SearchBar() {
         isFound: false,
       });
     }
+  };
+
+  // Handle closing the error message
+  const handleCloseError = () => {
+    setTimeoutError(false);
   };
 
   return (
@@ -259,6 +319,18 @@ export function SearchBar() {
       {/*      </Typography>*/}
       {/*    </Box>*/}
       {/*)}*/}
+
+      <Snackbar
+          open={timeoutError}
+          autoHideDuration={6000}
+          onClose={handleCloseError}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseError} severity="error" sx={{ width: '100%' }}>
+          Request timed out after 1 minute. Please try again later.
+        </Alert>
+      </Snackbar>
+
       {inferenceResponse ? (
       inferenceResponse?.is_check_worthy ?
           <FactCheckModal

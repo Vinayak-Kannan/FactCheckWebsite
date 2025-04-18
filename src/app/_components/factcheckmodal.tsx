@@ -242,7 +242,7 @@ export function FactCheckModal({
                           {"Just click the button below! "}
                       </Typography>
                       <Button
-                          href="/community"
+                          href={`/community?claimId=${encodeURIComponent(claim.id)}&claimText=${encodeURIComponent(claim.text)}`}
                           className="!bg-blue-600 !text-white px-4 rounded-lg">
                           Rate claims
                       </Button>

@@ -12,6 +12,7 @@ import { api } from "~/trpc/react";
 import type { ClaimComparison } from "~/server/api/routers/post";
 
 export default function Page() {
+
   const [similarity, setSimilarity] = useState<number>(0);
   const [unClassifiedClaim, setUnClassifiedClaim] = useState<
     ClaimComparison | undefined
@@ -19,15 +20,40 @@ export default function Page() {
   const [pairedClaim, setPairedClaim] = useState<ClaimComparison | undefined>(
     undefined,
   );
+  const [claimId, setClaimId] = useState<string | null>(null);
+  const [claimText, setClaimText] = useState<string | null>(null);
+  // 从URL中获取参数
+  useEffect(() => {
+    // 确保只在客户端运行
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlClaimId = urlParams.get('claimId');
+      const urlClaimText = urlParams.get('claimText');
+      // 如果URL中有参数，则使用它们
+      if (urlClaimId && urlClaimText) {
+        setUnClassifiedClaim({
+          id: urlClaimId,
+          text: urlClaimText,
+        });
+        setClaimId(urlClaimId);
+        setClaimText(urlClaimText);
+      }
+    }
+  }, []);
 
   const { data, isLoading, refetch, isRefetching } =
-    api.post.getCommunityClaims.useQuery(undefined, {
-      enabled: unClassifiedClaim === undefined,
-    });
+      api.post.getPairedClaim.useQuery(
+          { originalClaim: claimText ?? "", // Handle null case with a default value
+            originalId: claimId ?? ""  // Handle null case with a default value
+            },
+          {
+            // You might want to disable the query if the values aren't available yet
+            enabled: !!claimId && !!claimText
+          }
+          );
 
   useEffect(() => {
     if (data) {
-      setUnClassifiedClaim(data.unclassified_claim);
       setPairedClaim(data.paired_claim);
     }
   }, [data]);
