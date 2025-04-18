@@ -215,23 +215,48 @@ export function SearchBar() {
             >
                 Get the facts on climate change—type below to search for claims and check their accuracy!
             </Typography>
+            <Box className="flex flex-col items-center gap-4 mt-4">
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    href="/community"
+                    sx={{
+                        backgroundColor: "#8B5CF6",
+                        '&:hover': { backgroundColor: "#7C3AED" },
+                        color: "white",
+                        fontWeight: "bold",
+                        paddingX: 3,
+                        paddingY: 1,
+                        textTransform: "none",
+                    }}
+                >
+                    💡 Want to Help? Click Here to Rate Claims
+                </Button>
 
-            <Button
-                variant="contained"
-                className="w-1/6 bg-blue-700 text-white hover:bg-blue-800"
-                onClick={async () => {
-                    if (searchValueInference.length === 0) return;
-                    setProgress(0);
-                    setShowText(false);
-                    setIsLoadingInference(true);
-                    await handleSubmit(searchValueInference);
-                }}
-            >
-                Generate prediction
-                {isLoadingInference && (
-                    <CircularProgress size={24} className="ml-2" color="secondary" />
-                )}
-            </Button>
+                <Button
+                    variant="contained"
+                    className="w-[250px] bg-blue-700 text-white hover:bg-blue-800 normal-case"
+                    sx={{
+                        paddingY: 1.2,
+                        fontWeight: "bold",
+                        fontSize: "14px",
+                        letterSpacing: "0.5px",
+                        borderRadius: "6px",
+                    }}
+                    onClick={async () => {
+                        if (searchValueInference.length === 0) return;
+                        setProgress(0);
+                        setShowText(false);
+                        setIsLoadingInference(true);
+                        await handleSubmit(searchValueInference);
+                    }}
+                >
+                    Generate Prediction
+                    {isLoadingInference && (
+                        <CircularProgress size={20} className="ml-2" color="inherit" />
+                    )}
+                </Button>
+            </Box>
 
             <Box className="flex w-full max-w-[800px] items-center px-2 py-8">
                 <Box className="flex w-full items-center rounded">

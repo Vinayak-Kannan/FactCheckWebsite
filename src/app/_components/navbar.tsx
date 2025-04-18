@@ -45,7 +45,7 @@ export function Navbar() {
           </Link>
           <Link href="/community" passHref>
             <Button color="inherit" sx={{ color: "#000" }}>
-              Community
+              Rate
             </Button>
           </Link>
           <Link href="/about" passHref>
