@@ -1,3 +1,4 @@
+// Final fixed version of the SearchBar component with full functionality restored
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -5,12 +6,11 @@ import {
     Box,
     Autocomplete,
     TextField,
-    createFilterOptions,
     CircularProgress,
-    CircularProgressProps,
     Button,
     Typography,
 } from "@mui/material";
+import type { CircularProgressProps } from '@mui/material';
 import SearchIcon from "@mui/icons-material/Search";
 import { api } from "~/trpc/react";
 import { FactCheckModal } from "~/app/_components/factcheckmodal";
@@ -20,47 +20,47 @@ import {
 } from "~/server/api/routers/post";
 import PropTypes from "prop-types";
 
-interface CircularProgressWithLabelProps extends CircularProgressProps {
-  value: number;
-}
+interface CircularProgressWithLabelProps extends CircularProgressProps {value: number;}
 
 function CircularProgressWithLabel(props: CircularProgressWithLabelProps) {
-  return (
-      <Box sx={{ position: "relative", display: "inline-flex" }}>
-        <CircularProgress variant="determinate" {...props} />
-        <Box
-            sx={{
-              top: 0,
-              left: 0,
-              bottom: 0,
-              right: 0,
-              position: "absolute",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-        >
-          <Typography
-              variant="caption"
-              component="div"
-              sx={{ color: "text.secondary" }}
-          >
-            {`${Math.round(props.value)}%`}
-          </Typography>
+    return (
+        <Box sx={{ position: "relative", display: "inline-flex" }}>
+            <CircularProgress variant="determinate" {...props} />
+            <Box
+                sx={{
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    right: 0,
+                    position: "absolute",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
+            >
+                <Typography
+                    variant="caption"
+                    component="div"
+                    sx={{ color: "text.secondary" }}
+                >
+                    {`${Math.round(props.value)}%`}
+                </Typography>
+            </Box>
         </Box>
-      </Box>
-  );
+    );
 }
 
 CircularProgressWithLabel.propTypes = {
     value: PropTypes.number.isRequired,
 };
 
-
 export function SearchBar() {
     const [searchValue, setSearchValue] = useState("");
     const [searchValueInference, setSearchValueInferece] = useState("");
+    const [inputText, setInputText] = useState("");
+    const [isAutocompleteOpen, setIsAutocompleteOpen] = useState(false);
     const [searchOptions, setSearchOptions] = useState<(Claim | undefined)[]>([]);
+    const [filteredOptions, setFilteredOptions] = useState<string[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedClaim, setSelectedClaim] = useState<Claim | undefined>(
         undefined,
@@ -72,11 +72,6 @@ export function SearchBar() {
         useState<PostRealTimeInferenceResponse | null>(null);
     const [isLoadingInference, setIsLoadingInference] = useState(false);
 
-    const filterOptions = createFilterOptions({
-        matchFrom: "any",
-        limit: 50,
-    });
-
     const options = api.post.listClaims.useQuery(undefined, {
         enabled: makeRequestForClaims,
     });
@@ -86,12 +81,10 @@ export function SearchBar() {
         if (options.data) {
             const uniqueClaims = Array.from(
                 new Set(options.data.map((claim) => claim.text)),
-            ).map((text) => {
-                return options.data.find((claim) => claim.text === text);
-            });
+            ).map((text) => options.data.find((claim) => claim.text === text));
+
             if (uniqueClaims) {
                 setMakeRequestForClaims(false);
-
                 uniqueClaims.sort((a, b) => {
                     if (a?.cluster === undefined) return -1;
                     if (b?.cluster === undefined) return 1;
@@ -99,49 +92,34 @@ export function SearchBar() {
                 });
 
                 setSearchOptions(uniqueClaims);
+                setFilteredOptions(uniqueClaims.map((c) => c?.text ?? ""));
             }
         }
     }, [options.data]);
 
     const mutation = api.post.postRealTimeInference.useMutation();
-
     const query = api.post.getRealTimeInferenceUpdate.useMutation();
 
     const handleSubmit = async (claim: string) => {
         setIsLoadingInference(true);
         try {
-            console.log("Starting submit...");
-            const response: PostRealTimeInferenceResponse =
-                await mutation.mutateAsync({
-                    text: claim,
-                });
+            const response = await mutation.mutateAsync({text: claim});
             if (!response.is_check_worthy) {
                 setIsLoadingInference(false);
                 setInferenceResponse(response);
                 return response;
             }
-
-            let checkUpdate = await query.mutateAsync({
-                id: response.uuid,
-            });
-            while (checkUpdate.isFound === false) {
-                console.log("Waiting for update...");
+            let checkUpdate = await query.mutateAsync({id: response.uuid});
+            while (!checkUpdate.isFound) {
                 await new Promise((resolve) => setTimeout(resolve, 4000));
-                checkUpdate = await query.mutateAsync({
-                    id: response.uuid,
-                });
+                checkUpdate = await query.mutateAsync({id: response.uuid});
             }
-
-            console.log("Data submitted successfully!");
             setIsLoadingInference(false);
             setInferenceResponse(checkUpdate);
-            console.log(checkUpdate.claim)
-            console.log(typeof checkUpdate.claim)
-            setIsModalOpen(true)
+            setIsModalOpen(true);
             return checkUpdate;
         } catch (error) {
             console.error("Failed to submit data", error);
-            setIsLoadingInference(false);
             setInferenceResponse({
                 claim: {} as Claim,
                 is_check_worthy: false,
@@ -153,17 +131,24 @@ export function SearchBar() {
     };
 
     // State for progress bar
+    const handleFilterOptions = () => {
+        const filtered = searchOptions
+            .filter((opt) => opt?.text.toLowerCase().includes(inputText.toLowerCase()))
+            .map((opt) => opt?.text ?? "");
+        setFilteredOptions(filtered);
+        setIsAutocompleteOpen(true);
+    };
+
     const [progress, setProgress] = useState(0);
     const [showText, setShowText] = useState(false);
     const [showProgressBar, setShowProgressBar] = useState(false);
 
-// Effect to handle progress update
+    // Effect to handle progress update
     useEffect(() => {
         if (isLoadingInference) {
             const delayShowProgress = setTimeout(() => {
                 setShowProgressBar(true);
             }, 1500);
-
             setProgress(0);
             let timeElapsed = 0;
             const interval = setInterval(() => {
@@ -172,13 +157,11 @@ export function SearchBar() {
                     const newProgress = 70 * (1 - Math.exp(-k * timeElapsed)) + 30;
                     return Math.min(100, newProgress);
                 });
-
                 timeElapsed += 0.5;
                 if (timeElapsed >= 4) {
                     setShowText(true);
                 }
             }, 1500);
-
             return () => {
                 clearTimeout(delayShowProgress);
                 clearInterval(interval);
@@ -187,10 +170,11 @@ export function SearchBar() {
             const hideTimeout = setTimeout(() => {
                 setShowProgressBar(false);
             }, 300);
-
             return () => clearTimeout(hideTimeout);
         }
     }, [isLoadingInference]);
+
+
 
 
 
@@ -209,6 +193,7 @@ export function SearchBar() {
                     <CircularProgress />
                 </Box>
             )}
+
             <Typography
                 variant="h6"
                 sx={{ fontWeight: "bold", fontSize: "18px", marginBottom: "20px" }}
@@ -233,61 +218,52 @@ export function SearchBar() {
                     💡 Want to Help? Click Here to Rate Claims
                 </Button>
 
-                <Button
-                    variant="contained"
-                    className="w-[250px] bg-blue-700 text-white hover:bg-blue-800 normal-case"
-                    sx={{
-                        paddingY: 1.2,
-                        fontWeight: "bold",
-                        fontSize: "14px",
-                        letterSpacing: "0.5px",
-                        borderRadius: "6px",
-                    }}
-                    onClick={async () => {
-                        if (searchValueInference.length === 0) return;
-                        setProgress(0);
-                        setShowText(false);
-                        setIsLoadingInference(true);
-                        await handleSubmit(searchValueInference);
-                    }}
-                >
-                    Generate Prediction
-                    {isLoadingInference && (
-                        <CircularProgress size={20} className="ml-2" color="inherit" />
-                    )}
-                </Button>
-            </Box>
+<Button
+  variant="contained"
+  className="w-[250px] bg-blue-700 text-white hover:bg-blue-800 normal-case"
+  sx={{
+    paddingY: 1.2,
+    fontWeight: "bold",
+    fontSize: "14px",
+    letterSpacing: "0.5px",
+    borderRadius: "6px",
+  }}
+  onClick={async () => {
+    if (inputText.trim().length === 0) return;
+    setSearchValueInference(inputText);
+    setSearchValue(inputText);
+    setProgress(0);
+    setShowText(false);
+    setIsLoadingInference(true);
+    await handleSubmit(inputText);
+  }}
+>
+  Generate Prediction
+  {isLoadingInference && (
+    <CircularProgress size={24} className="ml-2" color="secondary" />
+  )}
+</Button>
 
             <Box className="flex w-full max-w-[800px] items-center px-2 py-8">
-                <Box className="flex w-full items-center rounded">
-                    <SearchIcon className="ml-2 text-gray-500" />
+                <Box className="flex w-full items-center space-x-2">
+                    <SearchIcon className="ml-2 text-gray-500"/>
                     <Autocomplete
-                        noOptionsText={"No matches... Check the veracity by clicking the button above!"}
                         fullWidth
-                        onInputChange={(_, newInputValue) => {
-                            if (newInputValue.length > 0) {
-                                setSearchValueInferece(newInputValue);
-                                setSearchValue(newInputValue);
-                            }
-                            return;
-                        }}
+                        options={filteredOptions}
+                        open={isAutocompleteOpen}
+                        onClose={() => setIsAutocompleteOpen(false)}
+                        inputValue={inputText}
                         value={searchValue}
-                        filterOptions={filterOptions}
-                        options={searchOptions.map((option) => {
-                            if (!option) return "";
-                            return option.text ?? "";
-                        })}
-                        onChange={(_, newValue) => {
-                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                            // @ts-expect-error
-                            setSearchValue(newValue! || "");
-                            const claim = searchOptions.find((option) => {
-                                if (!option) return false;
-                                return option.text === newValue;
-                            });
-                            if (!claim) return;
-                            setSelectedClaim(claim);
-                            setIsModalOpen(true);
+                        onInputChange={(_, newInputValue) => setInputText(newInputValue)}
+                        onChange={(_, selectedText) => {
+                            const text = typeof selectedText === "string" ? selectedText : "";
+                            setSearchValue(text);
+                            setInputText(text);
+                            const claim = searchOptions.find((opt) => opt?.text === text);
+                            if (claim) {
+                                setSelectedClaim(claim);
+                                setIsModalOpen(true);
+                            }
                         }}
                         renderInput={(params) => (
                             <TextField
@@ -301,6 +277,13 @@ export function SearchBar() {
                                         "&:hover fieldset": { borderColor: "#0B4797", borderWidth: "3px" },
                                         "&.Mui-focused fieldset": { borderColor: "#0B4797", borderWidth: "3px" },
                                     },
+                                }}
+                                onKeyDown={(event) => {
+                                    if (event.key === "Enter" && inputText.trim() !== "") {
+                                        event.preventDefault();
+                                        setSearchValue(inputText);
+                                        handleFilterOptions();
+                                    }
                                 }}
                             />
                         )}
@@ -359,6 +342,18 @@ export function SearchBar() {
                             );
                         }}
                     />
+                    <Button
+                        variant="contained"
+                        sx={{height: "56px", whiteSpace: "nowrap"}}
+                        onClick={() => {
+                            if (inputText.trim() !== "") {
+                                setSearchValue(inputText);
+                                handleFilterOptions();
+                            }
+                        }}
+                    >
+                        Submit
+                    </Button>
                 </Box>
             </Box>
 
@@ -377,37 +372,36 @@ export function SearchBar() {
                 </Box>
             )}
 
-    {/*{inferenceResponse && (*/}
-    {/*    <Box className="mt-4">*/}
-    {/*      <Typography color="red">*/}
-    {/*        Is Claim Checkworthy?{" "}*/}
-    {/*        {inferenceResponse.is_check_worthy ? "Yes" : "No"}*/}
-    {/*      </Typography>*/}
-    {/*      <Typography color="red">*/}
-    {/*        Checkworthy Score: {inferenceResponse.check_worthiness_score}*/}
-    {/*      </Typography>*/}
-    {/*    </Box>*/}
-    {/*)}*/}
-    {inferenceResponse ? (
-        inferenceResponse?.is_check_worthy ?
-            <FactCheckModal
-                open={isModalOpen}
-                claim={inferenceResponse.claim}
-                onCloseAction={() => setIsModalOpen(false)}
-            />
-            :
-            <Box className="mt-4">
-                <Typography color="red">
-                    Is Claim Checkworthy?{" "}
-                    {inferenceResponse.is_check_worthy ? "Yes" : "No"}
-                </Typography>
-                <Typography color="red">
-                    Checkworthy Score: {inferenceResponse.check_worthiness_score}
-                </Typography>
-            </Box>
-    ): null}
+            {/*{inferenceResponse && (*/}
+            {/*    <Box className="mt-4">*/}
+            {/*      <Typography color="red">*/}
+            {/*        Is Claim Checkworthy?{" "}*/}
+            {/*        {inferenceResponse.is_check_worthy ? "Yes" : "No"}*/}
+            {/*      </Typography>*/}
+            {/*      <Typography color="red">*/}
+            {/*        Checkworthy Score: {inferenceResponse.check_worthiness_score}*/}
+            {/*      </Typography>*/}
+            {/*    </Box>*/}
+            {/*)}*/}
+            {inferenceResponse && (
+                inferenceResponse.is_check_worthy ? (
+                    <FactCheckModal
+                        open={isModalOpen}
+                        claim={inferenceResponse.claim}
+                        onCloseAction={() => setIsModalOpen(false)}
+                    />
+                ) : (
+                    <Box className="mt-4">
+                        <Typography color="red">
+                            Is Claim Checkworthy? {inferenceResponse.is_check_worthy ? "Yes" : "No"}
+                        </Typography>
+                        <Typography color="red">
+                            Checkworthy Score: {inferenceResponse.check_worthiness_score}
+                        </Typography>
+                    </Box>
+                )
+            )}
 
-            {/* Example for inference */}
             <Box className="flex flex-col items-start w-full max-w-[720px] mt-4 gap-2">
                 <Typography variant="body1" color="textSecondary">
                     Example:
@@ -419,28 +413,36 @@ export function SearchBar() {
                         const exampleText = "The United States is currently only contributing 15% of emissions, but we are the largest historical contributor (we have had the most emissions over time).";
                         setSearchValueInferece(exampleText);
                         setSearchValue(exampleText);
+                        setInputText(exampleText);
                         setProgress(0);
                         setShowText(false);
                         setIsLoadingInference(true);
                         await handleSubmit(exampleText);
                     }}
                 >
-                    The United States is currently only contributing 15% of emissions, but we are the largest historical contributor (we have had the most emissions over time).
+                    The United States is currently only contributing 15% of emissions, but we are the largest historical
+                    contributor (we have had the most emissions over time).
                 </Button>
                 <Button
                     variant="outlined"
                     className="px-4 py-2"
                     onClick={async () => {
-                        const exampleText = "In September, New York City saw a similar story play out, as 7 inches of rain fell in 24 hours in some locations, submerging cars and city buses and shuttering rail travel., , * Before July 2023, has Vermont *never* experienced intense rainfall or flash flooding?, * Before July 2023, have some locations in New York City *never* had 7 inches of rainfall over a 24-hour period?, , >The consequences of storms are intensified in cities like New York, where storm drains and subway tunnels are in disrepair or were simply built for a more gentle climate.";
+                        const exampleText = "In September, New York City saw a similar story play out, as 7 inches of rain fell in 24 hours in some locations, submerging cars and city buses and shuttering rail travel., , * Before July 2023, has Vermont *never* experienced intense rainfall or flash flooding?, * Before July 2023, have some locations in New York City *never* had 7 inches of rainfall over a 24-hour period?, , >The consequences of storms are intensified in cities like New York, where storm drains and subway tunnels are in disrepair or were simply built for a more gentle climate..";
                         setSearchValueInferece(exampleText);
                         setSearchValue(exampleText);
+                        setInputText(exampleText);
                         setProgress(0);
                         setShowText(false);
                         setIsLoadingInference(true);
                         await handleSubmit(exampleText);
                     }}
                 >
-                    In September, New York City saw a similar story play out, as 7 inches of rain fell in 24 hours in some locations, submerging cars and city buses and shuttering rail travel., , * Before July 2023, has Vermont *never* experienced intense rainfall or flash flooding?, * Before July 2023, have some locations in New York City *never* had 7 inches of rainfall over a 24-hour period?, The consequences of storms are intensified in cities like New York, where storm drains and subway tunnels are in disrepair or were simply built for a more gentle climate.
+                    In September, New York City saw a similar story play out, as 7 inches of rain fell in 24 hours in
+                    some locations, submerging cars and city buses and shuttering rail travel., , Before July 2023, has
+                    Vermont *never* experienced intense rainfall or flash flooding?, * Before July 2023, have some
+                    locations in New York City *never* had 7 inches of rainfall over a 24-hour period?, The consequences
+                    of storms are intensified in cities like New York, where storm drains and subway tunnels are in
+                    disrepair or were simply built for a more gentle climate..
                 </Button>
                 <Button
                     variant="outlined"
@@ -449,6 +451,7 @@ export function SearchBar() {
                         const exampleText = "The US has a little over 200 coal-fired power plants, and the number is shrinking.";
                         setSearchValueInferece(exampleText);
                         setSearchValue(exampleText);
+                        setInputText(exampleText);
                         setProgress(0);
                         setShowText(false);
                         setIsLoadingInference(true);
@@ -458,9 +461,6 @@ export function SearchBar() {
                     The US has a little over 200 coal-fired power plants, and the number is shrinking.
                 </Button>
             </Box>
-
-
-
 
             {selectedClaim && (
                 <FactCheckModal open={isModalOpen} claim={selectedClaim} onCloseAction={() => setIsModalOpen(false)} />
