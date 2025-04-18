@@ -347,18 +347,6 @@ export function SearchBar() {
                     )}
                 </Box>
             )}
-
-            {/*{inferenceResponse && (*/}
-            {/*    <Box className="mt-4">*/}
-            {/*      <Typography color="red">*/}
-            {/*        Is Claim Checkworthy?{" "}*/}
-            {/*        {inferenceResponse.is_check_worthy ? "Yes" : "No"}*/}
-            {/*      </Typography>*/}
-            {/*      <Typography color="red">*/}
-            {/*        Checkworthy Score: {inferenceResponse.check_worthiness_score}*/}
-            {/*      </Typography>*/}
-            {/*    </Box>*/}
-            {/*)}*/}
             {inferenceResponse && (
                 inferenceResponse.is_check_worthy ? (
                     <FactCheckModal
