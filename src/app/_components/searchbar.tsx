@@ -1,6 +1,6 @@
 // Final fixed version of the SearchBar component with full functionality restored
 "use client";
-
+// temp comment to retrigger vercel
 import React, { useEffect, useState } from "react";
 import {
     Box,
