@@ -66,6 +66,9 @@ export default function Page() {
             sharing knowledge, and combating misinformation. Your volunteering
             effort can make a real impact
           </Typography>
+          <Typography className="text-gray-600">
+            Your similarity ratings help train our AI model to better understand patterns in climate discourse. Every contribution directly improves how future claims are clustered and interpreted.
+          </Typography>
         </Box>
 
         <Box className="flex flex-col gap-6">
