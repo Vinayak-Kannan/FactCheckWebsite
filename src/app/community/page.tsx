@@ -92,11 +92,11 @@ export default function Page() {
                 aria-labelledby="similarity-slider"
                 valueLabelDisplay="auto"
                 marks={[
-                  { value: 0, label: "0" },
-                  { value: 25, label: "25" },
-                  { value: 50, label: "50" },
-                  { value: 75, label: "75" },
-                  { value: 100, label: "100" },
+                  { value: 0, label: "0%" },
+                  { value: 25, label: "25%" },
+                  { value: 50, label: "50%" },
+                  { value: 75, label: "75%" },
+                  { value: 100, label: "100%" },
                 ]}
                 sx={{
                   "& .MuiSlider-track": {
@@ -107,6 +107,11 @@ export default function Page() {
                   },
                 }}
               />
+              {/* similarity labels */}
+              <Box className="flex justify-between text-sm text-gray-600 mt-1">
+                <Typography>Not at all similar</Typography>
+                <Typography>Completely similar</Typography>
+              </Box>
             </Box>
           </Box>
 
