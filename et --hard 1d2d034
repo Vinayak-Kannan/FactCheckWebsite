@@ -1,0 +1,144 @@
+* [33mdf617dc[m[33m ([m[1;36mHEAD -> [m[1;32mfrontend-feedback[m[33m)[m Restore working version of searchbar.tsx from commit db7a578
+* [33m6a6f98b[m[33m ([m[1;31morigin/frontend-feedback[m[33m)[m Fix build error: retriggering Vercel deployment
+*   [33mdb7a578[m Merge branch 'main' into frontend-feedback
+[32m|[m[33m\[m  
+[32m|[m *   [33mb444a78[m Merge pull request #20 from Vinayak-Kannan/shicheng
+[32m|[m [34m|[m[35m\[m  
+[32m|[m [34m|[m * [33m1a59d2c[m Changes for suggestions
+[32m|[m [34m|[m * [33m782caf2[m Changes for suggestions
+[32m|[m * [35m|[m   [33mc846f02[m Merge pull request #21 from Vinayak-Kannan/frontend-feedback
+[32m|[m [35m|[m[1;31m\[m [35m\[m  
+[32m|[m [35m|[m [1;31m|[m[35m/[m  
+[32m|[m [35m|[m[35m/[m[1;31m|[m   
+* [35m|[m [1;31m|[m [33mdde2828[m Branding & Copy and Website navigation changes
+[1;31m|[m [35m|[m[1;31m/[m  
+[1;31m|[m[1;31m/[m[35m|[m   
+* [35m|[m [33m1d2d034[m[33m ([m[1;32mmain[m[33m)[m Frontend updates: dropdown styling, claim prompt, color-coded veracity, improved source layout
+[35m|[m[35m/[m  
+*   [33m18964ac[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge pull request #19 from Vinayak-Kannan/shicheng
+[1;32m|[m[1;33m\[m  
+[1;32m|[m *   [33m48d6c20[m merge all together
+[1;32m|[m [1;34m|[m[1;32m\[m  
+[1;32m|[m [1;34m|[m[1;32m/[m  
+[1;32m|[m[1;32m/[m[1;34m|[m   
+* [1;34m|[m   [33m4ebbb2a[m Merge pull request #16 from Vinayak-Kannan/opacity-inference-card
+[1;36m|[m[31m\[m [1;34m\[m  
+[1;36m|[m * [1;34m|[m [33m9601ce1[m opacity and inference card
+[1;36m|[m * [1;34m|[m   [33m31109d0[m Merge branch 'main' of https://github.com/Vinayak-Kannan/FactCheckWebsite into opacity-inference-card for pull
+[1;36m|[m [32m|[m[33m\[m [1;34m\[m  
+[1;36m|[m * [33m\[m [1;34m\[m   [33me0a37fa[m Merge branch 'main' of https://github.com/Vinayak-Kannan/FactCheckWebsite into opacity-inference-card for pull
+[1;36m|[m [34m|[m[35m\[m [33m\[m [1;34m\[m  
+[1;36m|[m * [35m|[m [33m|[m [1;34m|[m [33m2f016bf[m merge
+[1;36m|[m * [35m|[m [33m|[m [1;34m|[m [33m7cd4c30[m opacity & inference result modal
+[1;36m|[m * [35m|[m [33m|[m [1;34m|[m   [33m31f2509[m Merge branch 'main' of https://github.com/Vinayak-Kannan/FactCheckWebsite into opacity-inference-card merge to push
+[1;36m|[m [36m|[m[1;31m\[m [35m\[m [33m\[m [1;34m\[m  
+[1;36m|[m * [1;31m|[m [35m|[m [33m|[m [1;34m|[m [33m7c92e75[m claimchart
+* [1;31m|[m [1;31m|[m [35m|[m [33m|[m [1;34m|[m   [33m91857de[m Merge pull request #18 from Vinayak-Kannan/hide_axis_numbers
+[33m|[m[1;33m\[m [1;31m\[m [1;31m\[m [35m\[m [33m\[m [1;34m\[m  
+[33m|[m [1;33m|[m[33m_[m[1;31m|[m[33m_[m[1;31m|[m[33m_[m[35m|[m[33m/[m [1;34m/[m  
+[33m|[m[33m/[m[1;33m|[m [1;31m|[m [1;31m|[m [35m|[m [1;34m|[m   
+[33m|[m * [1;31m|[m [1;31m|[m [35m|[m [1;34m|[m [33m7e9c4e3[m update
+[33m|[m[33m/[m [1;31m/[m [1;31m/[m [35m/[m [1;34m/[m  
+[33m|[m [1;31m|[m [1;31m|[m [35m|[m * [33m75efb85[m Examples and waiting
+[33m|[m [1;31m|[m[33m_[m[1;31m|[m[33m_[m[35m|[m[33m/[m  
+[33m|[m[33m/[m[1;31m|[m [1;31m|[m [35m|[m   
+* [1;31m|[m [1;31m|[m [35m|[m   [33m4eddb4d[m Merge pull request #17 from Vinayak-Kannan/another_fi
+[35m|[m[1;35m\[m [1;31m\[m [1;31m\[m [35m\[m  
+[35m|[m [1;35m|[m[35m_[m[1;31m|[m[35m_[m[1;31m|[m[35m/[m  
+[35m|[m[35m/[m[1;35m|[m [1;31m|[m [1;31m|[m   
+[35m|[m * [1;31m|[m [1;31m|[m   [33m152c2fe[m Merge branch 'main' into another_fi
+[35m|[m [1;36m|[m[35m\[m [1;31m\[m [1;31m\[m  
+[35m|[m [1;36m|[m[35m/[m [1;31m/[m [1;31m/[m  
+[35m|[m[35m/[m[1;36m|[m [1;31m|[m [1;31m|[m   
+* [1;36m|[m [1;31m|[m [1;31m|[m   [33m8e8ef6f[m Merge pull request #15 from Vinayak-Kannan/shicheng
+[1;31m|[m[33m\[m [1;36m\[m [1;31m\[m [1;31m\[m  
+[1;31m|[m [33m|[m[1;31m_[m[1;36m|[m[1;31m_[m[1;31m|[m[1;31m/[m  
+[1;31m|[m[1;31m/[m[33m|[m [1;36m|[m [1;31m|[m   
+[1;31m|[m * [1;36m|[m [1;31m|[m [33m6f67e4e[m Changes for redirection
+[1;31m|[m[1;31m/[m [1;36m/[m [1;31m/[m  
+* [1;36m|[m [1;31m|[m   [33mfe79b30[m Merge pull request #14 from Vinayak-Kannan/type_fixing
+[34m|[m[35m\[m [1;36m\[m [1;31m\[m  
+[34m|[m * [1;36m|[m [1;31m|[m [33mcd82811[m Updated post route
+[34m|[m[34m/[m [1;36m/[m [1;31m/[m  
+[34m|[m * [1;31m/[m [33m5110968[m wip
+[34m|[m[34m/[m [1;31m/[m  
+* [1;31m|[m   [33ma621fcb[m Merge pull request #13 from Vinayak-Kannan/small_fix
+[36m|[m[1;31m\[m [1;31m\[m  
+[36m|[m * [1;31m|[m [33m345694d[m hide axis
+[36m|[m [1;31m|[m[1;31m/[m  
+* [1;31m|[m   [33m6fe05ca[m Merge pull request #12 from Vinayak-Kannan/vin_quick_fix
+[1;31m|[m[1;33m\[m [1;31m\[m  
+[1;31m|[m [1;33m|[m[1;31m/[m  
+[1;31m|[m[1;31m/[m[1;33m|[m   
+[1;31m|[m * [33m8356431[m Updated metadata
+[1;31m|[m * [33mee787cf[m quick fixes
+[1;31m|[m[1;31m/[m  
+*   [33mf05153f[m Merge pull request #11 from Vinayak-Kannan/chart-dropdown
+[1;34m|[m[1;35m\[m  
+[1;34m|[m * [33m4da6e6b[m small fixes
+[1;34m|[m * [33mf646fa4[m fix the color code bug
+[1;34m|[m * [33m0a437d2[m fix the color code bug
+[1;34m|[m * [33m1af3386[m default community similarity
+[1;34m|[m * [33m993cc3c[m axis description
+[1;34m|[m * [33m23db175[m false claim color modify
+[1;34m|[m * [33m76e6917[m chart dropdown
+[1;34m|[m *   [33mfe93c52[m Merge branch 'main' of https://github.com/Vinayak-Kannan/FactCheckWebsite into chart-dropdown merge the main branch and push the chart component
+[1;34m|[m [1;36m|[m[1;34m\[m  
+[1;34m|[m [1;36m|[m[1;34m/[m  
+[1;34m|[m[1;34m/[m[1;36m|[m   
+* [1;36m|[m   [33m6d815fd[m Merge pull request #10 from Vinayak-Kannan/shicheng
+[32m|[m[33m\[m [1;36m\[m  
+[32m|[m * [1;36m|[m [33m5c43e38[m changed based on comments
+[32m|[m * [1;36m|[m [33m18845e4[m New changes
+* [33m|[m [1;36m|[m [33mf03c46e[m Merge pull request #9 from Vinayak-Kannan/shicheng
+[34m|[m[33m\[m[33m|[m [1;36m|[m 
+[34m|[m * [1;36m|[m [33m8c3c74d[m Changes for 214 week
+[34m|[m[34m/[m [1;36m/[m  
+[34m|[m *   [33mfc4e65e[m chart dropdown
+[34m|[m [36m|[m[34m\[m  
+[34m|[m [36m|[m[34m/[m  
+[34m|[m[34m/[m[36m|[m   
+* [36m|[m   [33m4aeacc4[m Merge pull request #7 from Vinayak-Kannan/inference
+[1;32m|[m[1;33m\[m [36m\[m  
+[1;32m|[m * [36m|[m [33m850d3fb[m Working inference
+[1;32m|[m[1;32m/[m [36m/[m  
+* [36m|[m   [33m125d8a9[m Merge pull request #6 from Vinayak-Kannan/test1
+[1;34m|[m[1;35m\[m [36m\[m  
+[1;34m|[m * [36m|[m [33m8e0da05[m Remove unused import
+[1;34m|[m * [36m|[m [33m49a599e[m prettier
+* [1;35m|[m [36m|[m [33m2688354[m Merge pull request #4 from Vinayak-Kannan/test1
+[1;36m|[m[1;35m\[m[1;35m|[m [36m|[m 
+[1;36m|[m [1;35m|[m * [33m6d85d22[m chart dropdown
+[1;36m|[m [1;35m|[m [31m|[m * [33m151c4f7[m[33m ([m[1;31morigin/test1[m[33m)[m a
+[1;36m|[m [1;35m|[m [31m|[m * [33mf483b15[m waiting merge
+[1;36m|[m [1;35m|[m [31m|[m * [33m6dd9ea4[m About and searchbar
+[1;36m|[m [1;35m|[m [31m|[m[1;35m/[m  
+[1;36m|[m [1;35m|[m[1;35m/[m[31m|[m   
+[1;36m|[m * [31m|[m [33m549a5fa[m Ourmodel Page with Chart
+[1;36m|[m[1;36m/[m [31m/[m  
+* [31m|[m   [33m13bf9a8[m Merge pull request #5 from Vinayak-Kannan/factcheckmodal
+[33m|[m[34m\[m [31m\[m  
+[33m|[m * [31m\[m   [33me816d51[m Merge branch 'main' into factcheckmodal
+[33m|[m [35m|[m[33m\[m [31m\[m  
+[33m|[m [35m|[m[33m/[m [31m/[m  
+[33m|[m[33m/[m[35m|[m [31m|[m   
+* [35m|[m [31m|[m   [33m62383f9[m Merge pull request #3 from Vinayak-Kannan/Submit_Human_Feedback
+[1;31m|[m[1;32m\[m [35m\[m [31m\[m  
+[1;31m|[m * [35m|[m [31m|[m [33m934177f[m Added community claim submit score
+[1;31m|[m[1;31m/[m [35m/[m [31m/[m  
+[1;31m|[m * [31m|[m [33m8e38b8d[m Fix mistake
+[1;31m|[m * [31m|[m [33mf955d5b[m Fix minor warnings
+[1;31m|[m [31m|[m[31m/[m  
+[1;31m|[m * [33m26b18cb[m fact check modal update, chart
+[1;31m|[m * [33m066870f[m factcheckmodal UI update
+[1;31m|[m * [33m2c79138[m chartjs
+[1;31m|[m * [33mb9c34c6[m[33m ([m[1;31morigin/yanjie[m[33m)[m update the UI of factCheckModal
+[1;31m|[m[1;31m/[m  
+* [33m9c736ff[m Added community claim getting
+*   [33m9c194b1[m Merge pull request #1 from Vinayak-Kannan/detached
+[1;33m|[m[1;34m\[m  
+[1;33m|[m * [33mbbcaac0[m Stop requests
+[1;33m|[m[1;33m/[m  
+* [33m1cfa62e[m Fix error
+* [33m1dbef65[m Update route handling in env
+* [33m3828492[m First Commit

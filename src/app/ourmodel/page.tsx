@@ -8,7 +8,9 @@ import { ClaimsChart } from "../_components/claimschart";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Divider from "@mui/material/Divider";
+import { Stack } from "@mui/material"; // if not already imported
 import { motion } from "framer-motion";
+
 
 export default function OurModel() {
   const [expanded1, setExpanded1] = useState(false);
@@ -252,45 +254,39 @@ export default function OurModel() {
       </Typography>
 
       {/* A.1 - A.3  */}
-      <Grid2
-        container
-        spacing={6}
-        justifyContent="center"
-        className="w-full justify-center px-4 pt-10"
-      >
-        {modelSteps.map((step) => (
-          <Grid2 key={step.id} width="30%">
-            <Card
-              onClick={step.onClick}
-              sx={{
-                backgroundColor:
-                  selectedStepId === step.id ? "#2449A8" : "white",
-                color: selectedStepId === step.id ? "white" : "black",
-                opacity: selectedStepId === null ? 1 : selectedStepId === step.id ? 1 : 0.3,
-  
-              }}
-              className="flex min-h-[150px] w-full flex-col items-center justify-between rounded-lg p-4 text-center shadow-xl"
-            >
-              <CardContent className="flex w-full flex-col items-center">
-                <Typography variant="h6" className="font-bold">
-                  {step.id}
-                </Typography>
-                <Typography variant="body1">{step.title}</Typography>
-                <Typography
-                  variant="body2"
-                  className={`transition-colors duration-100 ${selectedStepId === step.id ? "text-gray-300" : "text-gray-500"}`}
+        <Stack spacing={4} sx={{ width: "100%", maxWidth: 600, mt: 6 }}>
+            {modelSteps.map((step) => (
+                <Card
+                    key={step.id}
+                    onClick={step.onClick}
+                    sx={{
+                        backgroundColor: selectedStepId === step.id ? "#2449A8" : "white",
+                        color: selectedStepId === step.id ? "white" : "black",
+                        opacity: selectedStepId === null ? 1 : selectedStepId === step.id ? 1 : 0.3,
+                        cursor: "pointer",
+                    }}
+                    className="flex flex-col items-center justify-between rounded-lg p-4 text-center shadow-xl"
                 >
-                  {step.subtitle}
-                </Typography>
-              </CardContent>
-              <Divider className="my-2 w-full" />
-              <CardContent className="w-full rounded-md bg-black p-3 text-sm text-white">
-                {step.tooltip}
-              </CardContent>
-            </Card>
-          </Grid2>
-        ))}
-      </Grid2>
+                    <CardContent className="flex flex-col items-center">
+                        <Typography variant="h6" className="font-bold">
+                            {step.id}
+                        </Typography>
+                        <Typography variant="body1">{step.title}</Typography>
+                        <Typography
+                            variant="body2"
+                            className={`transition-colors duration-100 ${selectedStepId === step.id ? "text-gray-300" : "text-gray-500"}`}
+                        >
+                            {step.subtitle}
+                        </Typography>
+                    </CardContent>
+                    <Divider className="my-2 w-full" />
+                    <CardContent className="w-full rounded-md bg-black p-3 text-sm text-white">
+                        {step.tooltip}
+                    </CardContent>
+                </Card>
+            ))}
+        </Stack>
+
 
       {/* new content after click A.1 */}
         {expanded1 && (

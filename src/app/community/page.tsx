@@ -131,9 +131,28 @@ export default function Page() {
         <Typography variant="h6" className="mb-4">
           Have questions or thoughts to share?
         </Typography>
-        <Typography>
-          We want to hear from you! Reach out to us at myfactwiki@gmail.com
+        <Typography className="text-gray-700 mb-2">
+          We'd love to hear from you! Submit your feedback below:
         </Typography>
+
+        <Box
+            component="form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              alert("Thanks for your feedback!");
+            }}
+            className="flex flex-col gap-4"
+        >
+    <textarea
+        required
+        placeholder="Enter your feedback..."
+        rows={5}
+        className="w-full rounded-md border border-gray-300 p-3 text-base"
+    />
+          <Button type="submit" variant="contained" className="bg-blue-700 text-white hover:bg-blue-800">
+            Submit Feedback
+          </Button>
+        </Box>
       </Box>
     </Box>
   );

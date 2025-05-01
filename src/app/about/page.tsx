@@ -57,6 +57,12 @@ const AboutPage: React.FC = () => {
             <Typography variant="h4" component="h2" sx={{ textAlign: "center" }}gutterBottom >
               About the Project
             </Typography>
+
+            <Typography variant="body1" paragraph>
+              <strong>MyFactWiki is a collaborative initiative from Columbia University and Stanford Graduate School of Business</strong>, developed to bring transparency, credibility, and community-driven validation to climate-related claims.
+            </Typography>
+
+
             <Typography variant="body1">
               Misinformation’s effects, particularly around climate issues, is a complex and evolving phenomenon that requires a collective approach to address effectively. Limited expert resources, biased ratings from crowdsourced veracity judgments, and low public trust without engagement in the fact-checking process are key challenges this project aims to address.
             </Typography>
