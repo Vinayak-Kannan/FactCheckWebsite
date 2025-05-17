@@ -196,11 +196,16 @@ export function SearchBar() {
 
             <Typography
                 variant="h6"
-                sx={{ fontWeight: "bold", fontSize: "18px", marginBottom: "20px" }}
+                sx={{ fontWeight: "bold", fontSize: "18px", marginBottom: "10px" }}
             >
                 Get the facts on climate change—type below to search for claims and check their accuracy!
             </Typography>
-
+            <Typography
+                variant="body2"
+                sx={{ fontSize: "15px", color: "gray", marginBottom: "20px" }}
+            >
+                Enter a full sentence or phrase—e.g. <i>&quot;CO2 has no effect on temperature&quot;</i>—to check its factual accuracy.
+            </Typography>
             <Button
                 variant="contained"
                 className="w-1/6 bg-blue-700 text-white hover:bg-blue-800"
@@ -279,7 +284,7 @@ export function SearchBar() {
                                     <Box className="flex w-2/5 justify-end space-x-2">
                                         <Typography
                                             variant="body2"
-                                            className={`flex w-[90px] flex-shrink-0 items-center justify-center rounded px-2 py-1 text-center ${
+                                            className={`flex w-[80px] flex-shrink-0 items-center justify-center rounded px-2 py-1 text-center ${
                                                 claim.cleaned_predict_veracity?.toLowerCase() === "true"
                                                     ? "bg-blue-100 text-blue-800 border border-blue-300"
                                                     : "bg-blue-50 text-blue-600 border border-blue-200"
@@ -289,7 +294,7 @@ export function SearchBar() {
                                         </Typography>
                                         <Typography
                                             variant="body2"
-                                            className={`flex w-[100px] flex-shrink-0 items-center justify-center rounded px-2 py-1 text-center font-semibold ${
+                                            className={`flex w-[80px] flex-shrink-0 items-center justify-center rounded px-2 py-1 text-center font-semibold ${
                                                 claim.cleaned_veracity?.toLowerCase() === "true"
                                                     ? "bg-green-200 text-green-900 border border-green-300"
                                                     : "bg-red-200 text-red-900 border border-red-300"
@@ -301,14 +306,14 @@ export function SearchBar() {
                                             <Button
                                                 href={claim.source}
                                                 style={{ textTransform: "none" }}
-                                                className="w-[80px] flex-shrink-0 justify-start rounded !bg-gray-300 px-2 py-1 normal-case text-black hover:bg-gray-400 focus:outline-none active:bg-gray-500"
+                                                className="w-[75px] flex-shrink-0 justify-start rounded !bg-gray-300 px-2 py-1 normal-case text-black hover:bg-gray-400 focus:outline-none active:bg-gray-500"
                                             >
                                                 Source
                                             </Button>
                                         ) : (
                                             <Typography
                                                 variant="body2"
-                                                className="flex w-[80px] flex-shrink-0 items-center justify-center rounded bg-gray-300 px-2 py-1 text-center"
+                                                className="flex w-[75px] flex-shrink-0 items-center justify-center rounded bg-gray-300 px-2 py-1 text-center"
                                             >
                                                 {claim.source}
                                             </Typography>
